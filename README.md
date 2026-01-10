@@ -20,7 +20,7 @@ A modern, frontend-only React application that provides detailed insights into G
 | 🏷️ **Label Distribution**   | PR labels breakdown                            |
 | 🌿 **Branch Filtering**     | Filter PRs by target branch                    |
 | ⏱️ **Time Filters**         | 2 weeks, 1 month, 3 months, 6 months, all time |
-| 📥 **Export Options**       | CSV and JSON exports                           |
+| 📥 **Export Options**       | One-click CSV and JSON data export             |
 | 🌙 **Theme Support**        | Light and dark mode                            |
 
 ---

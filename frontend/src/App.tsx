@@ -1,9 +1,9 @@
-import { ArrowRight, ChevronDown, ChevronUp, GitBranch, Key, Search } from 'lucide-react';
+import { ArrowRight, ChevronDown, ChevronUp, Download, GitBranch, Key, Search } from 'lucide-react';
 import React from 'react';
 import { ErrorBoundary, Loader, ToastAction, ToastContainer, ToastData, createToast } from './components/common';
 import { ContributorList, ContributorModal } from './components/contributors';
 import { RepositoryStats } from './components/repository';
-import { GitHubService, Theme, ThemeService } from './services';
+import { ExportService, GitHubService, Theme, ThemeService } from './services';
 import { ContributorStats, RepositoryStats as RepositoryStatsType, TimeFilter } from './types';
 
 
@@ -420,6 +420,28 @@ class App extends React.Component<{}, AppState> {
                 {/* Results */}
                 {repositoryStats && !analyzing && (
                     <div className="results-content">
+                        {/* Export Buttons */}
+                        <div className="export-buttons">
+                            <button
+                                type="button"
+                                className="export-btn"
+                                onClick={() => ExportService.exportRepositoryCsv(repositoryStats)}
+                                title="Download contributor data as CSV"
+                            >
+                                <Download className="w-4 h-4" />
+                                Export CSV
+                            </button>
+                            <button
+                                type="button"
+                                className="export-btn"
+                                onClick={() => ExportService.exportRepositoryJson(repositoryStats)}
+                                title="Download full analysis as JSON"
+                            >
+                                <Download className="w-4 h-4" />
+                                Export JSON
+                            </button>
+                        </div>
+
                         <RepositoryStats stats={repositoryStats} />
                         <ContributorList
                             contributors={repositoryStats.contributors}
