@@ -453,6 +453,7 @@ class App extends React.Component<{}, AppState> {
                     contributor={selectedContributor}
                     isOpen={selectedContributor !== null}
                     onClose={this.closeContributorModal}
+                    repoFilter={repositoryStats ? `${repositoryStats.owner}/${repositoryStats.repo}` : undefined}
                 />
             </div>
         );

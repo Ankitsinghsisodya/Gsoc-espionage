@@ -17,6 +17,8 @@ interface ContributorModalProps {
     contributor: ContributorStats | null;
     isOpen: boolean;
     onClose: () => void;
+    /** Optional repository filter in 'owner/repo' format to show only PRs from this repo */
+    repoFilter?: string;
 }
 
 /**
@@ -63,8 +65,14 @@ export class ContributorModal extends React.Component<ContributorModalProps, Con
 
         try {
             const profile = await GitHubService.fetchUserStats(contributor.username, '3m');
+            // Filter PRs by repository if repoFilter is provided
+            const { repoFilter } = this.props;
+            let prs = profile.pullRequests || [];
+            if (repoFilter) {
+                prs = prs.filter(pr => pr.repositoryName === repoFilter);
+            }
             this.setState({
-                pullRequests: profile.pullRequests || [],
+                pullRequests: prs,
                 loading: false,
             });
         } catch (error) {
