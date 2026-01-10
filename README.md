@@ -20,8 +20,9 @@ A modern, frontend-only React application that provides detailed insights into G
 | 🏷️ **Label Distribution**   | PR labels breakdown                            |
 | 🌿 **Branch Filtering**     | Filter PRs by target branch                    |
 | ⏱️ **Time Filters**         | 2 weeks, 1 month, 3 months, 6 months, all time |
-| 📥 **Export Options**       | One-click CSV and JSON data export             |
-| 🌙 **Theme Support**        | Light and dark mode                            |
+| 📥 **Export Options**       | RFC 4180 compliant CSV and JSON data export    |
+| 🌙 **Theme Support**        | Light/dark mode with system preference detect  |
+| 📈 **Web Analytics**        | Vercel analytics for visitor insights          |
 
 ---
 
@@ -247,6 +248,7 @@ graph TD
 | **Icons**      | Lucide React                   |
 | **API**        | GitHub REST API v3             |
 | **Storage**    | Browser localStorage           |
+| **Analytics**  | Vercel Web Analytics           |
 
 ---
 
