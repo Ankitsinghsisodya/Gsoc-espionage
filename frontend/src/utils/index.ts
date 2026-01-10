@@ -4,5 +4,9 @@
  */
 
 export { DateUtils } from "./dateUtils";
-export { GitHubUrlParseError, GitHubUrlParser } from "./urlParser";
-export type { ParsedGitHubUrl } from "./urlParser";
+export {
+  GitHubUrlParseError,
+  GitHubUrlParser,
+  extractPRNumber,
+} from "./urlParser";
+export type { ParsedGitHubPRUrl, ParsedGitHubUrl } from "./urlParser";

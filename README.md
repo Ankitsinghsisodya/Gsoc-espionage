@@ -81,7 +81,7 @@ frontend/
 │   │
 │   ├── utils/               # Utility functions
 │   │   ├── dateUtils.ts     # Date manipulation
-│   │   └── urlParser.ts     # GitHub URL parsing
+│   │   └── urlParser.ts     # GitHub URL parsing (supports multiple formats)
 │   │
 │   ├── constants/           # Centralized configuration
 │   │   └── index.ts
@@ -172,6 +172,31 @@ For higher rate limits (5,000/hour vs 60/hour), add a GitHub Personal Access Tok
 3. Enter the token in the app's token input section
 
 > 🔒 The token is stored in your browser's localStorage, never sent to any server.
+
+### Supported URL Formats
+
+The URL parser supports multiple GitHub URL formats:
+
+| Format    | Example                                  |
+| --------- | ---------------------------------------- |
+| Simple    | `facebook/react`                         |
+| Domain    | `github.com/owner/repo`                  |
+| Full URL  | `https://github.com/owner/repo`          |
+| With .git | `https://github.com/owner/repo.git`      |
+| SSH       | `git@github.com:owner/repo.git`          |
+| PR URLs   | `https://github.com/owner/repo/pull/123` |
+
+```typescript
+import { GitHubUrlParser, extractPRNumber } from "./utils";
+
+// Parse any format
+GitHubUrlParser.parse("git@github.com:facebook/react.git");
+// → { owner: 'facebook', repo: 'react' }
+
+// Extract PR number from URL
+extractPRNumber("https://github.com/owner/repo/pull/456");
+// → 456
+```
 
 ---
 
