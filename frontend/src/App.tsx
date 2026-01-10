@@ -1,4 +1,4 @@
-import { ArrowRight, ChevronDown, ChevronUp, Download, GitBranch, Key, Search } from 'lucide-react';
+import { ArrowRight, ChevronDown, ChevronUp, Download, GitBranch, Key, Moon, Search, Sun } from 'lucide-react';
 import React from 'react';
 import { ErrorBoundary, Loader, ToastAction, ToastContainer, ToastData, createToast } from './components/common';
 import { ContributorList, ContributorModal } from './components/contributors';
@@ -469,6 +469,20 @@ class App extends React.Component<{}, AppState> {
         return (
             <ErrorBoundary>
                 <div className="app-layout no-sidebar">
+                    {/* Theme Toggle */}
+                    <button
+                        className="theme-toggle-btn"
+                        onClick={() => ThemeService.toggleTheme()}
+                        title={this.state.theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}
+                        aria-label="Toggle theme"
+                    >
+                        {this.state.theme === 'dark' ? (
+                            <Sun className="w-5 h-5" />
+                        ) : (
+                            <Moon className="w-5 h-5" />
+                        )}
+                    </button>
+
                     <main className="main-content">
                         {showResults ? this.renderResults() : this.renderHero()}
                     </main>
