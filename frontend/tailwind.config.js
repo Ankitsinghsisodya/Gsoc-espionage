@@ -24,6 +24,16 @@ export default {
           orange: "#f97316",
           green: "#22c55e",
         },
+        claude: {
+          sidebar: "#2d2b29",
+          sidebarHover: "#3d3a37",
+          main: "#292524",
+          input: "#3d3a37",
+          border: "#404040",
+          accent: "#dc8c6c",
+          text: "#f5f5f4",
+          textMuted: "#a8a29e",
+        },
         dark: {
           50: "#f8fafc",
           100: "#f1f5f9",

@@ -1,33 +1,24 @@
 version: "3.8"
 
 services:
-  mongodb:
-    image: mongo:7
-    container_name: pr-analyzer-mongodb
+  # Frontend - Vite React App
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: pr-analyzer-frontend
     ports:
-      - "27017:27017"
-    volumes:
-      - mongodb_data:/data/db
+      - "5173:5173"
     environment:
-      MONGO_INITDB_DATABASE: pr-analyzer
-    networks:
-      - pr-analyzer-network
-
-  redis:
-    image: redis:7-alpine
-    container_name: pr-analyzer-redis
-    ports:
-      - "6379:6379"
+      - VITE_GITHUB_API_URL=https://api.github.com
     volumes:
-      - redis_data:/data
-    command: redis-server --appendonly yes
+      # Bind mount for hot reloading
+      - ./frontend:/app
+      # Exclude node_modules
+      - /app/node_modules
     networks:
       - pr-analyzer-network
 
 networks:
   pr-analyzer-network:
     driver: bridge
-
-volumes:
-  mongodb_data:
-  redis_data:
