@@ -1,0 +1,33 @@
+version: "3.8"
+
+services:
+  mongodb:
+    image: mongo:7
+    container_name: pr-analyzer-mongodb
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongodb_data:/data/db
+    environment:
+      MONGO_INITDB_DATABASE: pr-analyzer
+    networks:
+      - pr-analyzer-network
+
+  redis:
+    image: redis:7-alpine
+    container_name: pr-analyzer-redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    command: redis-server --appendonly yes
+    networks:
+      - pr-analyzer-network
+
+networks:
+  pr-analyzer-network:
+    driver: bridge
+
+volumes:
+  mongodb_data:
+  redis_data:
