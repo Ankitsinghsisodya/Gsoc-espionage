@@ -1,29 +1,43 @@
+import { ArrowRight, ChevronDown, ChevronUp, GitBranch, Key, Search } from 'lucide-react';
 import React from 'react';
-import { ErrorBoundary, Loader } from './components/common';
+import { ErrorBoundary, Loader, ToastAction, ToastContainer, ToastData, createToast } from './components/common';
 import { ContributorList, ContributorModal } from './components/contributors';
-import { Footer, Header } from './components/layout';
-import { RepositoryForm, RepositoryStats } from './components/repository';
-import { ApiService, Theme, ThemeService } from './services';
-import { ContributorStats, RepositoryStats as RepositoryStatsType, TimeFilter, User } from './types';
+import { RepositoryStats } from './components/repository';
+import { GitHubService, Theme, ThemeService } from './services';
+import { ContributorStats, RepositoryStats as RepositoryStatsType, TimeFilter } from './types';
+
+
 
 /**
  * Main application state
  */
 interface AppState {
-    user: User | null;
     loading: boolean;
     analyzing: boolean;
     error: string | null;
     repositoryStats: RepositoryStatsType | null;
     branches: string[];
+    selectedBranch: string;
     selectedContributor: ContributorStats | null;
     theme: Theme;
+    repositoryUrl: string;
+    timeFilter: TimeFilter;
+    showResults: boolean;
+    toasts: ToastData[];
+    githubToken: string;
+    showTokenInput: boolean;
 }
 
+const TIME_FILTERS: { value: TimeFilter; label: string }[] = [
+    { value: '2w', label: '2 weeks' },
+    { value: '1m', label: '1 month' },
+    { value: '3m', label: '3 months' },
+    { value: '6m', label: '6 months' },
+    { value: 'all', label: 'All time' },
+];
+
 /**
- * Main application component
- * @class App
- * @extends {React.Component<{}, AppState>}
+ * Main application component with dashboard-style UI
  */
 class App extends React.Component<{}, AppState> {
     private themeUnsubscribe: (() => void) | null = null;
@@ -31,189 +45,381 @@ class App extends React.Component<{}, AppState> {
     constructor(props: {}) {
         super(props);
         this.state = {
-            user: null,
-            loading: true,
+            loading: false,
             analyzing: false,
             error: null,
             repositoryStats: null,
             branches: [],
+            selectedBranch: '',
             selectedContributor: null,
             theme: ThemeService.getTheme(),
+            repositoryUrl: '',
+            timeFilter: '1m',
+            showResults: false,
+            toasts: [],
+            githubToken: this.loadGitHubToken(),
+            showTokenInput: false,
         };
     }
 
-    /**
-     * Initialize app on mount
-     */
-    public async componentDidMount(): Promise<void> {
-        // Check for auth callback
-        this.handleAuthCallback();
 
-        // Load current user
-        await this.loadCurrentUser();
 
-        // Subscribe to theme changes
+    public componentDidMount(): void {
         this.themeUnsubscribe = ThemeService.subscribe((theme) => {
             this.setState({ theme });
         });
     }
 
-    /**
-     * Cleanup on unmount
-     */
     public componentWillUnmount(): void {
         if (this.themeUnsubscribe) {
             this.themeUnsubscribe();
         }
     }
 
-    /**
-     * Handle OAuth callback redirect
-     */
-    private handleAuthCallback(): void {
-        const params = new URLSearchParams(window.location.search);
-        const token = params.get('token');
-        const sessionId = params.get('sessionId');
 
-        if (token) {
-            ApiService.setAuth(token);
-            localStorage.setItem('session_id', sessionId || '');
-            // Clean URL
-            window.history.replaceState({}, '', '/');
-        }
-    }
 
-    /**
-     * Load current authenticated user
-     */
-    private loadCurrentUser = async (): Promise<void> => {
+    private loadGitHubToken = (): string => {
         try {
-            const user = await ApiService.getCurrentUser();
-            this.setState({ user, loading: false });
+            return localStorage.getItem('github_personal_token') || '';
         } catch {
-            this.setState({ loading: false });
+            return '';
         }
     };
 
-    /**
-     * Handle login
-     */
-    private handleLogin = (provider: 'github' | 'google'): void => {
-        const url = provider === 'github'
-            ? ApiService.getGitHubAuthUrl()
-            : ApiService.getGoogleAuthUrl();
-        window.location.href = url;
+    private handleTokenChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
+        this.setState({ githubToken: e.target.value });
     };
 
-    /**
-     * Handle logout
-     */
-    private handleLogout = async (): Promise<void> => {
-        await ApiService.logout();
-        this.setState({ user: null });
+    private saveGitHubToken = (): void => {
+        const { githubToken } = this.state;
+        try {
+            if (githubToken.trim()) {
+                localStorage.setItem('github_personal_token', githubToken.trim());
+                this.addToast('success', 'Token Saved', 'Your GitHub token has been saved locally.');
+            } else {
+                localStorage.removeItem('github_personal_token');
+                this.addToast('info', 'Token Removed', 'Your GitHub token has been removed.');
+            }
+        } catch {
+            this.addToast('error', 'Save Failed', 'Could not save token to localStorage.');
+        }
     };
 
-    /**
-     * Handle repository analysis
-     */
-    private handleAnalyze = async (url: string, branch: string, filter: TimeFilter): Promise<void> => {
+    private toggleTokenInput = (): void => {
+        this.setState(prev => ({ showTokenInput: !prev.showTokenInput }));
+    };
+
+    private handleUrlChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
+        this.setState({ repositoryUrl: e.target.value });
+    };
+
+    private handleTimeFilterChange = (e: React.ChangeEvent<HTMLSelectElement>): void => {
+        this.setState({ timeFilter: e.target.value as TimeFilter });
+    };
+
+    private handleBranchChange = (e: React.ChangeEvent<HTMLSelectElement>): void => {
+        this.setState({ selectedBranch: e.target.value });
+    };
+
+
+    private handleSubmit = async (e: React.FormEvent): Promise<void> => {
+        e.preventDefault();
+        const { repositoryUrl, timeFilter, selectedBranch } = this.state;
+
+        if (!repositoryUrl.trim()) return;
+
         this.setState({ analyzing: true, error: null });
 
         try {
-            const stats = await ApiService.analyzeRepository(url, branch, filter);
-            this.setState({ repositoryStats: stats, analyzing: false });
+            // Fetch branches first if we haven't yet
+            const { owner, repo } = GitHubService.parseUrl(repositoryUrl);
+            const branches = await GitHubService.fetchBranches(owner, repo);
+
+            // Call GitHub API directly from browser - each user gets their own rate limit
+            const stats = await GitHubService.fetchRepositoryStats(repositoryUrl, selectedBranch, timeFilter);
+            this.setState({
+                repositoryStats: stats,
+                branches,
+                analyzing: false,
+                showResults: true,
+            });
+
         } catch (error: any) {
-            const message = error.response?.data?.error?.message || 'Failed to analyze repository';
+            const message = error.message || 'Failed to analyze repository';
+            const { githubToken } = this.state;
+
+            // Check for rate limit error
+            if (message.toLowerCase().includes('rate limit')) {
+                if (githubToken) {
+                    // User has token but still hit rate limit
+                    this.addToast('warning', 'Rate Limit Exceeded',
+                        'GitHub API rate limit reached. Please wait before trying again.',
+                        10000
+                    );
+                } else {
+                    // User has no token - suggest adding one
+                    this.addToast('warning', 'Rate Limit Exceeded',
+                        'GitHub API rate limit reached (60/hour). Add a personal token for 5,000/hour!',
+                        0,
+                        {
+                            label: 'Add Token',
+                            onClick: () => this.setState({ showTokenInput: true, showResults: false }),
+                        }
+                    );
+                }
+            } else {
+                this.addToast('error', 'Analysis Failed', message);
+            }
+
             this.setState({ error: message, analyzing: false });
         }
     };
 
-    /**
-     * Handle URL change to fetch branches
-     */
-    private handleUrlChange = async (url: string): Promise<void> => {
-        // Try to parse URL and fetch branches
-        const match = url.match(/(?:github\.com\/)?([^\/]+)\/([^\/\s]+)/);
-        if (match) {
-            try {
-                const branches = await ApiService.getBranches(match[1], match[2]);
-                this.setState({ branches });
-            } catch {
-                this.setState({ branches: [] });
-            }
-        }
-    };
-
-    /**
-     * Handle contributor click
-     */
     private handleContributorClick = (contributor: ContributorStats): void => {
         this.setState({ selectedContributor: contributor });
     };
 
-    /**
-     * Close contributor modal
-     */
     private closeContributorModal = (): void => {
         this.setState({ selectedContributor: null });
     };
 
-    /**
-     * Render loading state
-     */
+    private addToast = (type: 'success' | 'error' | 'warning' | 'info', title: string, message: string, duration?: number, action?: ToastAction): void => {
+        const toast = createToast(type, title, message, duration, action);
+        this.setState(prev => ({ toasts: [...prev.toasts, toast] }));
+    };
+
+    private dismissToast = (id: string): void => {
+        this.setState(prev => ({ toasts: prev.toasts.filter(t => t.id !== id) }));
+    };
+
     private renderLoading(): React.ReactNode {
         return (
-            <div className="min-h-screen flex items-center justify-center bg-dark-900">
-                <Loader size="lg" message="Loading..." />
+            <div className="app-layout">
+                <div className="main-content">
+                    <div className="loading-container">
+                        <Loader size="lg" message="Loading..." />
+                    </div>
+                </div>
             </div>
         );
     }
 
-    /**
-     * Render main content
-     */
-    private renderContent(): React.ReactNode {
-        const { analyzing, error, repositoryStats, branches, selectedContributor } = this.state;
+    private renderHero(): React.ReactNode {
+        const { repositoryUrl, timeFilter, analyzing, error } = this.state;
 
         return (
-            <main className="flex-1 container mx-auto px-4 py-8">
-                {/* Hero Section */}
-                <div className="text-center mb-12">
-                    <h1 className="text-4xl md:text-5xl font-bold mb-4">
-                        <span className="gradient-text">Analyze</span> GitHub Pull Requests
-                    </h1>
-                    <p className="text-lg text-gray-400 max-w-2xl mx-auto">
-                        Get detailed insights about contributors, code quality, and PR metrics for any GitHub repository.
+            <div className="hero-section">
+                {/* Hero Header */}
+                <div className="hero-header">
+                    <div className="hero-icon">
+                        <GitBranch className="w-10 h-10" />
+                    </div>
+                    <h1 className="hero-title">PR Analyzer</h1>
+                    <p className="hero-subtitle">
+                        Get detailed insights about contributors, code quality, and PR metrics for any GitHub repository
                     </p>
                 </div>
 
-                {/* Repository Form */}
-                <div className="max-w-3xl mx-auto mb-12">
-                    <RepositoryForm
-                        onSubmit={this.handleAnalyze}
-                        loading={analyzing}
-                        branches={branches}
-                        onUrlChange={this.handleUrlChange}
-                    />
+                {/* Search Form */}
+                <form onSubmit={this.handleSubmit} className="search-form">
+                    <div className="search-input-group">
+                        <Search className="search-icon" />
+                        <input
+                            type="text"
+                            className="search-input"
+                            placeholder="Enter GitHub repository URL (e.g., facebook/react)"
+                            value={repositoryUrl}
+                            onChange={this.handleUrlChange}
+                            disabled={analyzing}
+                        />
+                    </div>
+
+                    <div className="search-options">
+                        <select
+                            className="branch-select"
+                            value={this.state.selectedBranch}
+                            onChange={this.handleBranchChange}
+                            disabled={analyzing}
+                        >
+                            <option value="">All branches</option>
+                            {this.state.branches.map(branch => (
+                                <option key={branch} value={branch}>{branch}</option>
+                            ))}
+                        </select>
+
+                        <select
+                            className="time-select"
+                            value={timeFilter}
+                            onChange={this.handleTimeFilterChange}
+                            disabled={analyzing}
+                        >
+                            {TIME_FILTERS.map(f => (
+                                <option key={f.value} value={f.value}>{f.label}</option>
+                            ))}
+                        </select>
+
+                        <button
+                            type="submit"
+                            className="analyze-btn"
+                            disabled={analyzing || !repositoryUrl.trim()}
+                        >
+                            {analyzing ? (
+                                <>Analyzing...</>
+                            ) : (
+                                <>
+                                    Analyze
+                                    <ArrowRight className="w-4 h-4" />
+                                </>
+                            )}
+                        </button>
+                    </div>
+                </form>
+
+                {/* GitHub Token Section - Non-obtrusive */}
+                <div className="api-token-section">
+                    <button
+                        type="button"
+                        className="api-token-toggle"
+                        onClick={this.toggleTokenInput}
+                    >
+                        <Key className="w-4 h-4" />
+                        <span>Use personal GitHub token for higher rate limits</span>
+                        <span className={`rate-limit-badge ${this.state.githubToken ? 'has-token' : ''}`}>
+                            {this.state.githubToken ? '5,000/hr' : '60/hr'}
+                        </span>
+                        {this.state.showTokenInput ? (
+                            <ChevronUp className="w-4 h-4" />
+                        ) : (
+                            <ChevronDown className="w-4 h-4" />
+                        )}
+                    </button>
+
+                    {this.state.showTokenInput && (
+                        <div className="api-token-input-section">
+                            <p className="api-token-hint">
+                                Get a personal access token from{' '}
+                                <a href="https://github.com/settings/tokens" target="_blank" rel="noopener noreferrer">
+                                    GitHub Settings
+                                </a>{' '}
+                                (no scopes needed for public repos)
+                            </p>
+                            <div className="api-token-input-group">
+                                <input
+                                    type="password"
+                                    className="api-token-input"
+                                    placeholder="ghp_xxxxxxxxxxxx"
+                                    value={this.state.githubToken}
+                                    onChange={this.handleTokenChange}
+                                />
+                                <button
+                                    type="button"
+                                    className="api-token-save-btn"
+                                    onClick={this.saveGitHubToken}
+                                >
+                                    {this.state.githubToken ? 'Save' : 'Clear'}
+                                </button>
+                            </div>
+                            <p className="api-token-note">
+                                🔒 Token is stored only in your browser's localStorage
+                            </p>
+                        </div>
+                    )}
                 </div>
 
                 {/* Error Message */}
                 {error && (
-                    <div className="max-w-3xl mx-auto mb-8 p-4 bg-red-500/20 border border-red-500/30 rounded-lg text-red-400">
+                    <div className="error-message">
                         {error}
                     </div>
                 )}
 
                 {/* Loading State */}
                 {analyzing && (
-                    <div className="flex justify-center py-12">
-                        <Loader size="lg" message="Analyzing repository..." />
+                    <div className="analyzing-state">
+                        <Loader size="md" message="Fetching repository data..." />
+                    </div>
+                )}
+
+                {/* Quick Stats Cards */}
+                <div className="feature-cards">
+                    <div className="feature-card">
+                        <div className="feature-card-icon purple">📊</div>
+                        <h3>PR Analytics</h3>
+                        <p>Track open, merged, and closed pull requests over time</p>
+                    </div>
+                    <div className="feature-card">
+                        <div className="feature-card-icon blue">👥</div>
+                        <h3>Contributors</h3>
+                        <p>Identify maintainers and top contributors</p>
+                    </div>
+                    <div className="feature-card">
+                        <div className="feature-card-icon green">📈</div>
+                        <h3>Metrics</h3>
+                        <p>Review times, merge rates, and code changes</p>
+                    </div>
+                </div>
+            </div>
+        );
+    }
+
+    private renderResults(): React.ReactNode {
+        const { repositoryStats, selectedContributor, repositoryUrl, timeFilter, analyzing, error } = this.state;
+
+        return (
+            <div className="results-container">
+                {/* Search Bar (compact) */}
+                <form onSubmit={this.handleSubmit} className="compact-search-form">
+                    <div className="compact-search-input-group">
+                        <Search className="search-icon" />
+                        <input
+                            type="text"
+                            className="search-input"
+                            placeholder="Enter GitHub repository URL"
+                            value={repositoryUrl}
+                            onChange={this.handleUrlChange}
+                            disabled={analyzing}
+                        />
+                    </div>
+                    <select
+                        className="branch-select compact"
+                        value={this.state.selectedBranch}
+                        onChange={this.handleBranchChange}
+                        disabled={analyzing}
+                    >
+                        <option value="">All branches</option>
+                        {this.state.branches.map(branch => (
+                            <option key={branch} value={branch}>{branch}</option>
+                        ))}
+                    </select>
+                    <select
+                        className="time-select compact"
+                        value={timeFilter}
+                        onChange={this.handleTimeFilterChange}
+                        disabled={analyzing}
+                    >
+                        {TIME_FILTERS.map(f => (
+                            <option key={f.value} value={f.value}>{f.label}</option>
+                        ))}
+                    </select>
+                    <button
+                        type="submit"
+                        className="analyze-btn compact"
+                        disabled={analyzing || !repositoryUrl.trim()}
+                    >
+                        {analyzing ? 'Analyzing...' : 'Analyze'}
+                    </button>
+                </form>
+
+                {/* Error Message */}
+                {error && (
+                    <div className="error-message">
+                        {error}
                     </div>
                 )}
 
                 {/* Results */}
                 {repositoryStats && !analyzing && (
-                    <div className="space-y-8 animate-in">
+                    <div className="results-content">
                         <RepositoryStats stats={repositoryStats} />
                         <ContributorList
                             contributors={repositoryStats.contributors}
@@ -222,21 +428,17 @@ class App extends React.Component<{}, AppState> {
                     </div>
                 )}
 
-                {/* Contributor Modal */}
                 <ContributorModal
                     contributor={selectedContributor}
                     isOpen={selectedContributor !== null}
                     onClose={this.closeContributorModal}
                 />
-            </main>
+            </div>
         );
     }
 
-    /**
-     * Render application
-     */
     public render(): React.ReactNode {
-        const { user, loading } = this.state;
+        const { loading, showResults } = this.state;
 
         if (loading) {
             return this.renderLoading();
@@ -244,14 +446,13 @@ class App extends React.Component<{}, AppState> {
 
         return (
             <ErrorBoundary>
-                <div className="min-h-screen flex flex-col bg-dark-900">
-                    <Header
-                        user={user}
-                        onLogin={this.handleLogin}
-                        onLogout={this.handleLogout}
-                    />
-                    {this.renderContent()}
-                    <Footer />
+                <div className="app-layout no-sidebar">
+                    <main className="main-content">
+                        {showResults ? this.renderResults() : this.renderHero()}
+                    </main>
+
+                    {/* Toast Notifications */}
+                    <ToastContainer toasts={this.state.toasts} onDismiss={this.dismissToast} />
                 </div>
             </ErrorBoundary>
         );
