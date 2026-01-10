@@ -200,7 +200,7 @@ export const GitHubUrlParser = {
     const result = parseGitHubUrl(url);
     if (!result) {
       throw new GitHubUrlParseError(
-        "Invalid GitHub URL format. Expected: owner/repo or https://github.com/owner/repo",
+        "Invalid GitHub URL format. Supported formats: owner/repo, https://github.com/owner/repo, https://github.com/owner/repo.git, or git@github.com:owner/repo.git",
         url
       );
     }

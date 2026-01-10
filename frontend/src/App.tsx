@@ -124,7 +124,7 @@ class App extends React.Component<{}, AppState> {
 
     private handleSubmit = async (e: React.FormEvent): Promise<void> => {
         e.preventDefault();
-        const { repositoryUrl, timeFilter, selectedBranch } = this.state;
+        const { repositoryUrl, timeFilter, selectedBranch, githubToken } = this.state;
 
         if (!repositoryUrl.trim()) return;
 
@@ -146,7 +146,6 @@ class App extends React.Component<{}, AppState> {
 
         } catch (error: any) {
             const message = error.message || 'Failed to analyze repository';
-            const { githubToken } = this.state;
 
             // Check for rate limit error
             if (message.toLowerCase().includes('rate limit')) {

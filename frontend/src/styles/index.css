@@ -32,6 +32,7 @@
   --accent-teal: #1f6feb;
   --accent-orange: #d29922;
   --accent-red: #da3633;
+  --accent-purple: #8957e5;
 
   --gradient-primary: linear-gradient(135deg, #238636 0%, #2ea043 100%);
   --gradient-secondary: linear-gradient(135deg, #21262d 0%, #30363d 100%);
@@ -64,6 +65,7 @@
   --accent-teal: #0969da;
   --accent-orange: #9a6700;
   --accent-red: #cf222e;
+  --accent-purple: #8250df;
 
   color: var(--text-primary);
   background-color: var(--bg-primary);

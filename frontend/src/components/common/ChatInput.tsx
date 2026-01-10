@@ -46,8 +46,11 @@ export class ChatInput extends React.Component<ChatInputProps, ChatInputState> {
 
     private handleKeyDown = (e: React.KeyboardEvent): void => {
         if (e.key === 'Enter' && !e.shiftKey) {
-            e.preventDefault();
-            this.props.onSubmit();
+            // Only submit if not loading and input has content
+            if (!this.props.loading && this.props.value.trim()) {
+                e.preventDefault();
+                this.props.onSubmit();
+            }
         }
     };
 

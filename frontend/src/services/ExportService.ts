@@ -79,7 +79,9 @@ class ExportServiceClass {
     ]);
 
     const csv = this.generateCsv(headers, rows);
-    const filename = `${data.owner}-${data.repo}-contributors.csv`;
+    const filename = `${this.sanitizeFilename(
+      data.owner
+    )}-${this.sanitizeFilename(data.repo)}-contributors.csv`;
 
     this.downloadFile(csv, filename, "text/csv");
   }
@@ -99,7 +101,9 @@ class ExportServiceClass {
    */
   public exportRepositoryJson(data: RepositoryStats): void {
     const json = JSON.stringify(data, null, 2);
-    const filename = `${data.owner}-${data.repo}-analysis.json`;
+    const filename = `${this.sanitizeFilename(
+      data.owner
+    )}-${this.sanitizeFilename(data.repo)}-analysis.json`;
 
     this.downloadFile(json, filename, "application/json");
   }
@@ -142,7 +146,9 @@ class ExportServiceClass {
     ]);
 
     const csv = this.generateCsv(headers, rows);
-    const filename = `${data.username}-pull-requests.csv`;
+    const filename = `${this.sanitizeFilename(
+      data.username
+    )}-pull-requests.csv`;
 
     this.downloadFile(csv, filename, "text/csv");
   }
@@ -161,7 +167,7 @@ class ExportServiceClass {
    */
   public exportUserJson(data: UserProfileStats): void {
     const json = JSON.stringify(data, null, 2);
-    const filename = `${data.username}-profile.json`;
+    const filename = `${this.sanitizeFilename(data.username)}-profile.json`;
 
     this.downloadFile(json, filename, "application/json");
   }
@@ -171,34 +177,68 @@ class ExportServiceClass {
   // ============================================================================
 
   /**
+   * Sanitizes a string for use as a filename.
+   * Replaces filesystem-unsafe characters with hyphens.
+   * @private
+   *
+   * @param {string} name - The string to sanitize
+   * @returns {string} Sanitized filename-safe string
+   */
+  private sanitizeFilename(name: string): string {
+    // Replace unsafe characters: / \ : * ? " < > |
+    return name.replace(/[/\\:*?"<>|]/g, "-").replace(/--+/g, "-");
+  }
+
+  /**
    * Generates a CSV string from headers and row data.
+   * Applies RFC 4180 escaping for proper CSV format.
    * @private
    *
    * @param {string[]} headers - Column headers
-   * @param {(string | number | boolean)[]} rows - Data rows
+   * @param {(string | number | boolean | null | undefined)[]} rows - Data rows
    * @returns {string} Formatted CSV string
    */
   private generateCsv(
     headers: string[],
-    rows: (string | number | boolean)[][]
+    rows: (string | number | boolean | null | undefined)[][]
   ): string {
-    const headerLine = headers.join(",");
-    const dataLines = rows.map((row) => row.join(","));
+    const escapedHeaders = headers.map((h) => this.escapeCsvField(h));
+    const headerLine = escapedHeaders.join(",");
+
+    const dataLines = rows.map((row) =>
+      row.map((cell) => this.escapeCsvField(cell)).join(",")
+    );
 
     return [headerLine, ...dataLines].join("\n");
   }
 
   /**
-   * Escapes a field for CSV format.
-   * Wraps in quotes and escapes internal quotes.
+   * Escapes a field for CSV format per RFC 4180.
+   * Converts value to string, then wraps in quotes and escapes internal quotes
+   * if the field contains comma, double-quote, or newline.
    * @private
    *
-   * @param {string} field - The field to escape
+   * @param {string | number | boolean | null | undefined} field - The field to escape
    * @returns {string} Escaped field safe for CSV
    */
-  private escapeCsvField(field: string): string {
-    // Escape quotes by doubling them, wrap in quotes
-    return `"${field.replace(/"/g, '""')}"`;
+  private escapeCsvField(
+    field: string | number | boolean | null | undefined
+  ): string {
+    // Convert to string
+    const str = field === null || field === undefined ? "" : String(field);
+
+    // Check if escaping is needed (contains comma, quote, or newline)
+    if (
+      str.includes(",") ||
+      str.includes('"') ||
+      str.includes("\n") ||
+      str.includes("\r")
+    ) {
+      // Escape quotes by doubling them, wrap in quotes
+      return `"${str.replace(/"/g, '""')}"`;
+    }
+
+    return str;
   }
 
   /**

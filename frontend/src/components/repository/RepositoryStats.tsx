@@ -1,4 +1,4 @@
-import { GitMerge, GitPullRequest, GitPullRequestClosed, Tag } from 'lucide-react';
+import { GitMerge, GitPullRequest, GitPullRequestDraft, Tag } from 'lucide-react';
 import React from 'react';
 import { PullRequest, RepositoryStats as RepositoryStatsType } from '../../types';
 import { Card } from '../common/Card';
@@ -263,7 +263,7 @@ export class RepositoryStats extends React.Component<RepositoryStatsProps, Repos
                             'merged'
                         )}
                         {this.renderStatCard(
-                            <GitPullRequestClosed className="w-5 h-5" />,
+                            <GitPullRequestDraft className="w-5 h-5" />,
                             'Open',
                             openCount,
                             'bg-open',
