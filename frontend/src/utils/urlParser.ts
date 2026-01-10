@@ -57,23 +57,14 @@ export const GitHubUrlParser = {
   parse(url: string): ParsedGitHubUrl {
     const cleanUrl = url.trim().replace(/\/$/, "");
 
-    // Handle owner/repo shorthand format
-    if (!cleanUrl.includes("://") && !cleanUrl.includes("@")) {
-      const parts = cleanUrl.split("/");
-      if (parts.length >= 2 && parts[0] && parts[1]) {
-        return {
-          owner: parts[0],
-          repo: parts[1].replace(".git", ""),
-        };
-      }
-    }
-
-    // Handle full HTTPS URL
-    const httpsMatch = cleanUrl.match(/github\.com\/([^\/]+)\/([^\/]+)/);
-    if (httpsMatch) {
+    // Handle full HTTPS URL or github.com without protocol
+    const githubMatch = cleanUrl.match(
+      /(?:https?:\/\/)?github\.com\/([^\/]+)\/([^\/]+)/
+    );
+    if (githubMatch) {
       return {
-        owner: httpsMatch[1],
-        repo: httpsMatch[2].replace(".git", ""),
+        owner: githubMatch[1],
+        repo: githubMatch[2].replace(".git", ""),
       };
     }
 
@@ -84,6 +75,21 @@ export const GitHubUrlParser = {
         owner: sshMatch[1],
         repo: sshMatch[2].replace(".git", ""),
       };
+    }
+
+    // Handle owner/repo shorthand format (must not contain github.com)
+    if (
+      !cleanUrl.includes("://") &&
+      !cleanUrl.includes("@") &&
+      !cleanUrl.includes("github.com")
+    ) {
+      const parts = cleanUrl.split("/");
+      if (parts.length >= 2 && parts[0] && parts[1]) {
+        return {
+          owner: parts[0],
+          repo: parts[1].replace(".git", ""),
+        };
+      }
     }
 
     throw new GitHubUrlParseError(
