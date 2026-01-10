@@ -8,7 +8,7 @@ export type Theme = "light" | "dark";
  * @class ThemeServiceClass
  */
 class ThemeServiceClass {
-  private theme: Theme = "dark";
+  private theme: Theme = "light";
   private listeners: Set<(theme: Theme) => void> = new Set();
 
   /**
