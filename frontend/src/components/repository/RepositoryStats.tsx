@@ -119,8 +119,10 @@ export class RepositoryStats extends React.Component<RepositoryStatsProps, Repos
             <button
                 className={`repo-stat-card clickable ${isActive ? 'active' : ''}`}
                 onClick={() => this.handleStatClick(filter)}
+                aria-label={`View ${label}: ${value}`}
+                aria-pressed={isActive}
             >
-                <div className={`repo-stat-icon ${color}`}>
+                <div className={`repo-stat-icon ${color}`} aria-hidden="true">
                     {icon}
                 </div>
                 <div className="repo-stat-content">
@@ -143,7 +145,7 @@ export class RepositoryStats extends React.Component<RepositoryStatsProps, Repos
         if (labels.length === 0) {
             return (
                 <div className="pr-list-empty">
-                    <Tag className="w-8 h-8" />
+                    <Tag className="w-8 h-8" aria-hidden="true" />
                     <p>No labels found</p>
                 </div>
             );
@@ -170,7 +172,7 @@ export class RepositoryStats extends React.Component<RepositoryStatsProps, Repos
         if (filteredPRs.length === 0) {
             return (
                 <div className="pr-list-empty">
-                    <GitPullRequest className="w-8 h-8" />
+                    <GitPullRequest className="w-8 h-8" aria-hidden="true" />
                     <p>No pull requests found</p>
                 </div>
             );

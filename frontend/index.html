@@ -9,29 +9,27 @@
   <title>PR Analyzer - GitHub Pull Request Analytics & Contributor Insights</title>
   <meta name="title" content="PR Analyzer - GitHub Pull Request Analytics & Contributor Insights" />
   <meta name="description"
-    content="Analyze GitHub Pull Requests with detailed contributor insights, merge rates, activity timelines, and export options. Track PR metrics across repositories with ease." />
+    content="Analyze GitHub Pull Requests with detailed contributor insights, merge rates, activity timelines, and export options. Track PR metrics across repositories with ease. Discover active GSoC participants and monitor pull request activity." />
   <meta name="keywords"
-  content="GitHub, Pull Request, PR Analytics, Contributor Insights, Code Review, Repository Stats, Open Source, Developer Tools, Git Analytics, Merge Rate" />
+    content="GitHub, Pull Request, PR Analytics, Contributor Insights, Code Review, Repository Stats, Open Source, Developer Tools, Git Analytics, Merge Rate, GSoC, Google Summer of Code" />
   <meta name="robots" content="index, follow" />
   <meta name="language" content="English" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="description"
-    content="Analyze GitHub repository contributions to discover active GSoC participants and track pull request activity" />
-  <meta name="author" content="Ankit Sisodya" />
-  <meta name="author" content="Ankit singh sisodya" />
-  <meta property="og:title" content="GSoC Espionage" />
-  <meta property="og:description"
-    content="Analyze GitHub repository contributions to discover active GSoC participants" />
-  <!-- Canonical URL - Update with your deployed URL -->
-  <link rel="canonical" href="https://pr-analyzer.example.com/" />
+  <meta name="author" content="Ankit Singh Sisodya" />
+  <meta name="generator" content="Vite + React" />
 
-  <!-- Favicon -->
+  <!-- Canonical URL -->
+  <link rel="canonical" href="https://gsoc-espionage.vercel.app/" />
+
+  <!-- Favicon & App Icons -->
   <link rel="icon" type="image/png" href="/favicon.png" />
   <link rel="apple-touch-icon" href="/favicon.png" />
 
+  <!-- Web App Manifest -->
+  <link rel="manifest" href="/manifest.json" />
+
   <!-- Open Graph / Facebook -->
   <meta property="og:type" content="website" />
-  <meta property="og:url" content="https://pr-analyzer.example.com/" />
+  <meta property="og:url" content="https://gsoc-espionage.vercel.app/" />
   <meta property="og:title" content="PR Analyzer - GitHub Pull Request Analytics" />
   <meta property="og:description"
     content="Analyze GitHub Pull Requests with detailed contributor insights, merge rates, and activity timelines. Export data to CSV or JSON." />
@@ -41,7 +39,7 @@
 
   <!-- Twitter Card -->
   <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:url" content="https://pr-analyzer.example.com/" />
+  <meta name="twitter:url" content="https://gsoc-espionage.vercel.app/" />
   <meta name="twitter:title" content="PR Analyzer - GitHub Pull Request Analytics" />
   <meta name="twitter:description"
     content="Analyze GitHub Pull Requests with detailed contributor insights, merge rates, and activity timelines." />
@@ -65,22 +63,49 @@
     "@context": "https://schema.org",
     "@type": "WebApplication",
     "name": "PR Analyzer",
-    "description": "Analyze GitHub Pull Requests with detailed contributor insights and metrics",
-    "url": "https://pr-analyzer.example.com/",
+    "alternateName": "GitHub PR Analyzer",
+    "description": "Analyze GitHub Pull Requests with detailed contributor insights, merge rates, activity timelines, and export options. Perfect for tracking GSoC participants and open source contributions.",
+    "url": "https://gsoc-espionage.vercel.app/",
     "applicationCategory": "DeveloperApplication",
     "operatingSystem": "Web Browser",
+    "browserRequirements": "Requires JavaScript. Works best in modern browsers (Chrome, Firefox, Safari, Edge).",
+    "softwareVersion": "1.0.0",
+    "author": {
+      "@type": "Person",
+      "name": "Ankit Singh Sisodya"
+    },
     "offers": {
       "@type": "Offer",
       "price": "0",
-      "priceCurrency": "USD"
+      "priceCurrency": "USD",
+      "availability": "https://schema.org/InStock"
     },
     "featureList": [
-      "Repository PR Analytics",
-      "Contributor Statistics",
+      "GitHub Repository PR Analytics",
+      "Contributor Statistics & Insights",
       "Activity Timeline Visualization",
       "Label Distribution Analysis",
       "Branch Filtering",
-      "CSV/JSON Export"
+      "CSV/JSON Data Export",
+      "GSoC Participant Tracking"
+    ],
+    "screenshot": "/og-image.png",
+    "keywords": "GitHub, Pull Request, PR Analytics, Contributor Insights, GSoC, Open Source"
+  }
+  </script>
+
+  <!-- BreadcrumbList for SEO -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      {
+        "@type": "ListItem",
+        "position": 1,
+        "name": "Home",
+        "item": "https://gsoc-espionage.vercel.app/"
+      }
     ]
   }
   </script>
@@ -89,6 +114,25 @@
 <body>
   <div id="root"></div>
   <script type="module" src="/src/main.tsx"></script>
+
+  <!-- Fallback content for SEO crawlers and users without JavaScript -->
+  <noscript>
+    <div style="padding: 2rem; text-align: center; font-family: system-ui, sans-serif;">
+      <h1>PR Analyzer - GitHub Pull Request Analytics & Contributor Insights</h1>
+      <p>Analyze GitHub Pull Requests with detailed contributor insights, merge rates, activity timelines, and export
+        options.</p>
+      <h2>Features</h2>
+      <ul style="list-style: none; padding: 0;">
+        <li>📊 Repository PR Analytics</li>
+        <li>👥 Contributor Statistics</li>
+        <li>📈 Activity Timeline Visualization</li>
+        <li>🏷️ Label Distribution Analysis</li>
+        <li>🌿 Branch Filtering</li>
+        <li>📤 CSV/JSON Export</li>
+      </ul>
+      <p>Please enable JavaScript to use this application.</p>
+    </div>
+  </noscript>
 </body>
 
 </html>

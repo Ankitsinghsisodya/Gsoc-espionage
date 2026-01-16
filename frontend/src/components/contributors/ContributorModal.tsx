@@ -239,15 +239,16 @@ export class ContributorModal extends React.Component<ContributorModalProps, Con
                 <div className="modal-contributor-header">
                     <img
                         src={contributor.avatarUrl}
-                        alt={contributor.username}
+                        alt={`${contributor.username}'s profile picture`}
                         className="modal-contributor-avatar"
+                        loading="lazy"
                     />
                     <div>
                         <div className="modal-contributor-name-row">
                             <h2 className="modal-contributor-name">{contributor.username}</h2>
                             {contributor.isMaintainer && (
                                 <span className="badge badge-maintainer">
-                                    <Crown className="w-3 h-3" />
+                                    <Crown className="w-3 h-3" aria-hidden="true" />
                                     Maintainer
                                 </span>
                             )}
@@ -259,7 +260,7 @@ export class ContributorModal extends React.Component<ContributorModalProps, Con
                             className="modal-github-link"
                         >
                             View on GitHub
-                            <ExternalLink className="w-4 h-4" />
+                            <ExternalLink className="w-4 h-4" aria-hidden="true" />
                         </a>
                     </div>
                 </div>
@@ -275,7 +276,7 @@ export class ContributorModal extends React.Component<ContributorModalProps, Con
                 {/* Merge Rate */}
                 <div className="modal-merge-rate">
                     <div className="modal-merge-rate-header">
-                        <GitMerge className="w-5 h-5" />
+                        <GitMerge className="w-5 h-5" aria-hidden="true" />
                         <span>Merge Rate</span>
                     </div>
                     <div className="modal-merge-rate-bar">
@@ -291,7 +292,7 @@ export class ContributorModal extends React.Component<ContributorModalProps, Con
                 <div className="pr-list-section">
                     <div className="pr-list-header">
                         <h3 className="pr-list-title">
-                            <GitPullRequest className="w-5 h-5" />
+                            <GitPullRequest className="w-5 h-5" aria-hidden="true" />
                             Pull Requests
                         </h3>
                     </div>

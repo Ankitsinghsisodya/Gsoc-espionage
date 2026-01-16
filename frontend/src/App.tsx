@@ -210,7 +210,7 @@ class App extends React.Component<{}, AppState> {
             <div className="hero-section">
                 {/* Hero Header */}
                 <div className="hero-header">
-                    <div className="hero-icon">
+                    <div className="hero-icon" aria-hidden="true">
                         <GitBranch className="w-10 h-10" />
                     </div>
                     <h1 className="hero-title">PR Analyzer</h1>
@@ -220,9 +220,9 @@ class App extends React.Component<{}, AppState> {
                 </div>
 
                 {/* Search Form */}
-                <form onSubmit={this.handleSubmit} className="search-form">
+                <form onSubmit={this.handleSubmit} className="search-form" role="search">
                     <div className="search-input-group">
-                        <Search className="search-icon" />
+                        <Search className="search-icon" aria-hidden="true" />
                         <input
                             type="text"
                             className="search-input"
@@ -230,6 +230,7 @@ class App extends React.Component<{}, AppState> {
                             value={repositoryUrl}
                             onChange={this.handleUrlChange}
                             disabled={analyzing}
+                            aria-label="GitHub repository URL"
                         />
                     </div>
 
@@ -239,6 +240,7 @@ class App extends React.Component<{}, AppState> {
                             value={this.state.selectedBranch}
                             onChange={this.handleBranchChange}
                             disabled={analyzing}
+                            aria-label="Select branch"
                         >
                             <option value="">All branches</option>
                             {this.state.branches.map(branch => (
@@ -251,6 +253,7 @@ class App extends React.Component<{}, AppState> {
                             value={timeFilter}
                             onChange={this.handleTimeFilterChange}
                             disabled={analyzing}
+                            aria-label="Select time range"
                         >
                             {TIME_FILTERS.map(f => (
                                 <option key={f.value} value={f.value}>{f.label}</option>
@@ -267,7 +270,7 @@ class App extends React.Component<{}, AppState> {
                             ) : (
                                 <>
                                     Analyze
-                                    <ArrowRight className="w-4 h-4" />
+                                    <ArrowRight className="w-4 h-4" aria-hidden="true" />
                                 </>
                             )}
                         </button>
@@ -280,21 +283,23 @@ class App extends React.Component<{}, AppState> {
                         type="button"
                         className="api-token-toggle"
                         onClick={this.toggleTokenInput}
+                        aria-expanded={this.state.showTokenInput}
+                        aria-controls="token-input-section"
                     >
-                        <Key className="w-4 h-4" />
+                        <Key className="w-4 h-4" aria-hidden="true" />
                         <span>Use personal GitHub token for higher rate limits</span>
                         <span className={`rate-limit-badge ${this.state.githubToken ? 'has-token' : ''}`}>
                             {this.state.githubToken ? '5,000/hr' : '60/hr'}
                         </span>
                         {this.state.showTokenInput ? (
-                            <ChevronUp className="w-4 h-4" />
+                            <ChevronUp className="w-4 h-4" aria-hidden="true" />
                         ) : (
-                            <ChevronDown className="w-4 h-4" />
+                            <ChevronDown className="w-4 h-4" aria-hidden="true" />
                         )}
                     </button>
 
                     {this.state.showTokenInput && (
-                        <div className="api-token-input-section">
+                        <div id="token-input-section" className="api-token-input-section">
                             <p className="api-token-hint">
                                 Get a personal access token from{' '}
                                 <a href="https://github.com/settings/tokens" target="_blank" rel="noopener noreferrer">
@@ -309,6 +314,7 @@ class App extends React.Component<{}, AppState> {
                                     placeholder="ghp_xxxxxxxxxxxx"
                                     value={this.state.githubToken}
                                     onChange={this.handleTokenChange}
+                                    aria-label="GitHub personal access token"
                                 />
                                 <button
                                     type="button"
@@ -327,7 +333,7 @@ class App extends React.Component<{}, AppState> {
 
                 {/* Error Message */}
                 {error && (
-                    <div className="error-message">
+                    <div className="error-message" role="alert" aria-live="assertive">
                         {error}
                     </div>
                 )}
@@ -411,7 +417,7 @@ class App extends React.Component<{}, AppState> {
 
                 {/* Error Message */}
                 {error && (
-                    <div className="error-message">
+                    <div className="error-message" role="alert">
                         {error}
                     </div>
                 )}
@@ -427,7 +433,7 @@ class App extends React.Component<{}, AppState> {
                                 onClick={() => ExportService.exportRepositoryCsv(repositoryStats)}
                                 title="Download contributor data as CSV"
                             >
-                                <Download className="w-4 h-4" />
+                                <Download className="w-4 h-4" aria-hidden="true" />
                                 Export CSV
                             </button>
                             <button
@@ -436,7 +442,7 @@ class App extends React.Component<{}, AppState> {
                                 onClick={() => ExportService.exportRepositoryJson(repositoryStats)}
                                 title="Download full analysis as JSON"
                             >
-                                <Download className="w-4 h-4" />
+                                <Download className="w-4 h-4" aria-hidden="true" />
                                 Export JSON
                             </button>
                         </div>

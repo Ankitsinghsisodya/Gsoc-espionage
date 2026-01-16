@@ -36,8 +36,9 @@ export class ContributorCard extends React.Component<ContributorCardProps> {
                     {/* Avatar */}
                     <img
                         src={contributor.avatarUrl}
-                        alt={contributor.username}
+                        alt={`${contributor.username}'s avatar`}
                         className="contributor-avatar"
+                        loading="lazy"
                     />
 
                     {/* Info */}
@@ -48,7 +49,7 @@ export class ContributorCard extends React.Component<ContributorCardProps> {
                             </h3>
                             {contributor.isMaintainer && (
                                 <span className="badge badge-maintainer">
-                                    <Crown className="w-3 h-3" />
+                                    <Crown className="w-3 h-3" aria-hidden="true" />
                                     Maintainer
                                 </span>
                             )}
@@ -57,11 +58,11 @@ export class ContributorCard extends React.Component<ContributorCardProps> {
                         {/* Stats */}
                         <div className="contributor-stats">
                             <div className="contributor-stat">
-                                <GitPullRequest className="w-4 h-4" />
+                                <GitPullRequest className="w-4 h-4" aria-hidden="true" />
                                 <span>{contributor.totalPRs} PRs</span>
                             </div>
                             <div className="contributor-stat merged">
-                                <GitMerge className="w-4 h-4" />
+                                <GitMerge className="w-4 h-4" aria-hidden="true" />
                                 <span>{contributor.mergedPRs} merged</span>
                             </div>
                             <div className="contributor-stat open">

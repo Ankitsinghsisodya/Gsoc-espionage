@@ -110,11 +110,12 @@ export class ContributorList extends React.Component<ContributorListProps, Contr
                             className="contributor-sort-direction"
                             onClick={this.toggleSortDirection}
                             title={`Sort ${sortDirection === 'asc' ? 'descending' : 'ascending'}`}
+                            aria-label={`Sort ${sortDirection === 'asc' ? 'descending' : 'ascending'}`}
                         >
                             {sortDirection === 'asc' ? (
-                                <ArrowUp className="w-4 h-4" />
+                                <ArrowUp className="w-4 h-4" aria-hidden="true" />
                             ) : (
-                                <ArrowDown className="w-4 h-4" />
+                                <ArrowDown className="w-4 h-4" aria-hidden="true" />
                             )}
                         </button>
                     </div>

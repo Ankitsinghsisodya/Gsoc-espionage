@@ -78,22 +78,27 @@ export class Modal extends React.Component<ModalProps> {
             <div
                 className="modal-overlay animate-fade-in"
                 onClick={this.handleOverlayClick}
+                role="presentation"
             >
                 <div
                     className={`card w-full ${this.getSizeClasses()} mx-4 max-h-[90vh] overflow-hidden flex flex-col animate-slide-up`}
+                    role="dialog"
+                    aria-modal="true"
+                    aria-labelledby={title ? 'modal-title' : undefined}
                 >
                     {/* Header */}
                     <div className="flex items-center justify-between p-4 border-b border-dark-700 dark:border-dark-700 light:border-gray-200">
                         {title && (
-                            <h2 className="text-xl font-semibold text-white dark:text-white light:text-gray-900">
+                            <h2 id="modal-title" className="text-xl font-semibold text-white dark:text-white light:text-gray-900">
                                 {title}
                             </h2>
                         )}
                         <button
                             onClick={onClose}
                             className="p-1 text-gray-400 hover:text-white rounded-lg hover:bg-dark-700 transition-colors"
+                            aria-label="Close dialog"
                         >
-                            <X className="w-5 h-5" />
+                            <X className="w-5 h-5" aria-hidden="true" />
                         </button>
                     </div>
 
