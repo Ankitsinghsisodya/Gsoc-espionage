@@ -1,6 +1,6 @@
 {
-  "name": "PR Analyzer - GitHub Pull Request Analytics",
-  "short_name": "PR Analyzer",
+  "name": "GSoC Espionage - GitHub PR Analytics & Contributor Insights",
+  "short_name": "GSoC Espionage",
   "description": "Analyze GitHub Pull Requests with detailed contributor insights, merge rates, activity timelines, and export options. Track GSoC participants and open source contributions.",
   "start_url": "/",
   "display": "standalone",
@@ -30,7 +30,7 @@
       "sizes": "1200x630",
       "type": "image/png",
       "form_factor": "wide",
-      "label": "PR Analyzer Dashboard"
+      "label": "GSoC Espionage Dashboard"
     }
   ],
   "related_applications": [],
