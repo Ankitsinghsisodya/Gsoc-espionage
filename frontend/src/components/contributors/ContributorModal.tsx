@@ -28,8 +28,10 @@ interface ContributorModalProps {
  */
 interface ContributorModalState {
     pullRequests: PullRequest[];
+    allPullRequests: PullRequest[];
     loading: boolean;
     filter: PRFilter;
+    selectedRepo: string;
 }
 
 /**
@@ -40,8 +42,10 @@ export class ContributorModal extends React.Component<ContributorModalProps, Con
         super(props);
         this.state = {
             pullRequests: [],
+            allPullRequests: [],
             loading: false,
             filter: 'all',
+            selectedRepo: '',
         };
     }
 
@@ -52,7 +56,7 @@ export class ContributorModal extends React.Component<ContributorModalProps, Con
         }
         // Reset when modal closes
         if (!this.props.isOpen && prevProps.isOpen) {
-            this.setState({ pullRequests: [], filter: 'all' });
+            this.setState({ pullRequests: [], allPullRequests: [], filter: 'all', selectedRepo: '' });
         }
     }
 
@@ -67,15 +71,13 @@ export class ContributorModal extends React.Component<ContributorModalProps, Con
 
         try {
             const profile = await GitHubService.fetchUserStats(contributor.username, '3m');
-            // Filter PRs by repository if repoFilter is provided
-            const { repoFilter } = this.props;
-            let prs = profile.pullRequests || [];
-            if (repoFilter) {
-                prs = prs.filter(pr => pr.repositoryName === repoFilter);
-            }
+            const prs = profile.pullRequests || [];
+            // Store all PRs and set initial selectedRepo to show all
             this.setState({
+                allPullRequests: prs,
                 pullRequests: prs,
                 loading: false,
+                selectedRepo: '',
             });
         } catch (error) {
             console.error('Failed to fetch pull requests:', error);
@@ -87,17 +89,39 @@ export class ContributorModal extends React.Component<ContributorModalProps, Con
      * Filter pull requests based on selected filter
      */
     private getFilteredPRs(): PullRequest[] {
-        const { pullRequests, filter } = this.state;
+        const { allPullRequests, filter, selectedRepo } = this.state;
 
+        // First filter by repo
+        let prs = selectedRepo
+            ? allPullRequests.filter(pr => pr.repositoryName === selectedRepo)
+            : allPullRequests;
+
+        // Then filter by status
         switch (filter) {
             case 'open':
-                return pullRequests.filter(pr => pr.state === 'open');
+                return prs.filter(pr => pr.state === 'open');
             case 'merged':
-                return pullRequests.filter(pr => pr.merged);
+                return prs.filter(pr => pr.merged);
             default:
-                return pullRequests;
+                return prs;
         }
     }
+
+    /**
+     * Get unique repos from PRs
+     */
+    private getRepoOptions(): string[] {
+        const { allPullRequests } = this.state;
+        const repos = new Set(allPullRequests.map(pr => pr.repositoryName));
+        return Array.from(repos).sort();
+    }
+
+    /**
+     * Handle repo filter change
+     */
+    private handleRepoChange = (e: React.ChangeEvent<HTMLSelectElement>): void => {
+        this.setState({ selectedRepo: e.target.value });
+    };
 
     /**
      * Handle filter change
@@ -139,29 +163,52 @@ export class ContributorModal extends React.Component<ContributorModalProps, Con
      * Render filter tabs
      */
     private renderFilterTabs(): React.ReactNode {
-        const { filter } = this.state;
+        const { filter, selectedRepo, allPullRequests } = this.state;
         const { contributor } = this.props;
 
         if (!contributor) return null;
 
-        const tabs: { key: PRFilter; label: string; count: number }[] = [
-            { key: 'all', label: 'All', count: contributor.totalPRs },
-            { key: 'open', label: 'Open', count: contributor.openPRs },
-            { key: 'merged', label: 'Merged', count: contributor.mergedPRs },
+        const repoOptions = this.getRepoOptions();
+        const filteredCount = this.getFilteredPRs().length;
+
+        const tabs: { key: PRFilter; label: string }[] = [
+            { key: 'all', label: 'All' },
+            { key: 'open', label: 'Open' },
+            { key: 'merged', label: 'Merged' },
         ];
 
         return (
-            <div className="pr-filter-tabs">
-                {tabs.map(tab => (
-                    <button
-                        key={tab.key}
-                        className={`pr-filter-tab ${filter === tab.key ? 'active' : ''}`}
-                        onClick={() => this.handleFilterChange(tab.key)}
+            <div className="pr-filters-container">
+                {/* Repo dropdown */}
+                <div className="pr-repo-filter">
+                    <select
+                        className="repo-filter-select"
+                        value={selectedRepo}
+                        onChange={this.handleRepoChange}
                     >
-                        {tab.label}
-                        <span className="pr-filter-count">{tab.count}</span>
-                    </button>
-                ))}
+                        <option value="">All Repositories ({allPullRequests.length} PRs)</option>
+                        {repoOptions.map(repo => (
+                            <option key={repo} value={repo}>{repo}</option>
+                        ))}
+                    </select>
+                </div>
+
+                {/* Status filter tabs */}
+                <div className="pr-filter-tabs">
+                    {tabs.map(tab => (
+                        <button
+                            key={tab.key}
+                            className={`pr-filter-tab ${filter === tab.key ? 'active' : ''}`}
+                            onClick={() => this.handleFilterChange(tab.key)}
+                        >
+                            {tab.label}
+                        </button>
+                    ))}
+                </div>
+
+                <div className="pr-count-badge">
+                    {filteredCount} PR{filteredCount !== 1 ? 's' : ''} found
+                </div>
             </div>
         );
     }
