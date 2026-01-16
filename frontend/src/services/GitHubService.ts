@@ -34,6 +34,7 @@ import {
   UserProfileStats,
 } from "../types";
 import { DateUtils, GitHubUrlParser } from "../utils";
+import { CACHE_TTL, CacheService } from "./CacheService";
 
 /**
  * GitHub API Error with additional context.
@@ -242,6 +243,22 @@ class GitHubServiceClass {
     timeFilter: TimeFilter
   ): Promise<RepositoryStats> {
     const { owner, repo } = this.parseUrl(url);
+    const cacheKey = CacheService.generateKey(
+      "repo_stats",
+      owner,
+      repo,
+      branch || "all",
+      timeFilter
+    );
+
+    // Check cache first
+    const cached = CacheService.get<RepositoryStats>(cacheKey);
+    if (cached) {
+      console.log(`[Cache HIT] Repository stats for ${owner}/${repo}`);
+      return cached;
+    }
+
+    console.log(`[Cache MISS] Fetching repository stats for ${owner}/${repo}`);
 
     // Fetch PRs with pagination
     const prs = await this.fetchPullRequests(owner, repo, branch, timeFilter);
@@ -259,7 +276,7 @@ class GitHubServiceClass {
       topReviewers: [],
     };
 
-    return {
+    const result: RepositoryStats = {
       owner,
       repo,
       branch,
@@ -271,6 +288,10 @@ class GitHubServiceClass {
       activityTimeline,
       reviewStats,
     };
+
+    // Cache the result
+    CacheService.set(cacheKey, result, CACHE_TTL.REPO_STATS);
+    return result;
   }
 
   /**
@@ -287,6 +308,15 @@ class GitHubServiceClass {
    * ```
    */
   public async fetchBranches(owner: string, repo: string): Promise<string[]> {
+    const cacheKey = CacheService.generateKey("branches", owner, repo);
+
+    // Check cache first
+    const cached = CacheService.get<string[]>(cacheKey);
+    if (cached) {
+      console.log(`[Cache HIT] Branches for ${owner}/${repo}`);
+      return cached;
+    }
+
     try {
       const branches: string[] = [];
       let page = 1;
@@ -303,6 +333,8 @@ class GitHubServiceClass {
         page++;
       }
 
+      // Cache the result
+      CacheService.set(cacheKey, branches, CACHE_TTL.BRANCHES);
       return branches;
     } catch (error) {
       console.error("Failed to fetch branches:", error);
@@ -332,6 +364,21 @@ class GitHubServiceClass {
     username: string,
     timeFilter: TimeFilter
   ): Promise<UserProfileStats> {
+    const cacheKey = CacheService.generateKey(
+      "user_stats",
+      username.toLowerCase(),
+      timeFilter
+    );
+
+    // Check cache first
+    const cached = CacheService.get<UserProfileStats>(cacheKey);
+    if (cached) {
+      console.log(`[Cache HIT] User stats for ${username}`);
+      return cached;
+    }
+
+    console.log(`[Cache MISS] Fetching user stats for ${username}`);
+
     // Fetch user profile
     const user = await this.request<{
       login: string;
@@ -358,7 +405,7 @@ class GitHubServiceClass {
       closedPRs: prs.filter((pr) => pr.state === "closed" && !pr.merged).length,
     };
 
-    return {
+    const result: UserProfileStats = {
       username: user.login,
       avatarUrl: user.avatar_url,
       bio: user.bio,
@@ -372,6 +419,10 @@ class GitHubServiceClass {
       totalStats,
       maintainerRepos: [],
     };
+
+    // Cache the result
+    CacheService.set(cacheKey, result, CACHE_TTL.USER_PROFILE);
+    return result;
   }
 
   /**
