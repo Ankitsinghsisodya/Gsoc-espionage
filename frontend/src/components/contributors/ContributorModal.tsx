@@ -1,4 +1,4 @@
-import { Crown, ExternalLink, GitMerge, GitPullRequest } from 'lucide-react';
+import { Crown, ExternalLink, GitMerge, GitPullRequest, User } from 'lucide-react';
 import React from 'react';
 import { GitHubService } from '../../services';
 import { ContributorStats, PullRequest } from '../../types';
@@ -19,6 +19,8 @@ interface ContributorModalProps {
     onClose: () => void;
     /** Optional repository filter in 'owner/repo' format to show only PRs from this repo */
     repoFilter?: string;
+    /** Optional callback to analyze user's full profile */
+    onAnalyzeUser?: (username: string) => void;
 }
 
 /**
@@ -253,15 +255,30 @@ export class ContributorModal extends React.Component<ContributorModalProps, Con
                                 </span>
                             )}
                         </div>
-                        <a
-                            href={`https://github.com/${contributor.username}`}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="modal-github-link"
-                        >
-                            View on GitHub
-                            <ExternalLink className="w-4 h-4" aria-hidden="true" />
-                        </a>
+                        <div className="modal-actions">
+                            <a
+                                href={`https://github.com/${contributor.username}`}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="modal-github-link"
+                            >
+                                View on GitHub
+                                <ExternalLink className="w-4 h-4" aria-hidden="true" />
+                            </a>
+                            {this.props.onAnalyzeUser && (
+                                <button
+                                    type="button"
+                                    className="modal-analyze-btn"
+                                    onClick={() => {
+                                        this.props.onAnalyzeUser!(contributor.username);
+                                        this.props.onClose();
+                                    }}
+                                >
+                                    <User className="w-4 h-4" aria-hidden="true" />
+                                    Analyze Full Profile
+                                </button>
+                            )}
+                        </div>
                     </div>
                 </div>
 
