@@ -3,8 +3,10 @@ import React from 'react';
 import { ErrorBoundary, Loader, ToastAction, ToastContainer, ToastData, createToast } from './components/common';
 import { ContributorList, ContributorModal } from './components/contributors';
 import { RepositoryStats } from './components/repository';
+import { UserAnalytics } from './components/user';
 import { ExportService, GitHubService, Theme, ThemeService } from './services';
-import { ContributorStats, RepositoryStats as RepositoryStatsType, TimeFilter } from './types';
+import { ContributorStats, RepositoryStats as RepositoryStatsType, TimeFilter, UserProfileStats } from './types';
+import { GitHubUrlParser } from './utils';
 
 
 
@@ -16,6 +18,8 @@ interface AppState {
     analyzing: boolean;
     error: string | null;
     repositoryStats: RepositoryStatsType | null;
+    userStats: UserProfileStats | null;
+    analysisType: 'repo' | 'user' | null;
     branches: string[];
     selectedBranch: string;
     selectedContributor: ContributorStats | null;
@@ -49,6 +53,8 @@ class App extends React.Component<{}, AppState> {
             analyzing: false,
             error: null,
             repositoryStats: null,
+            userStats: null,
+            analysisType: null,
             branches: [],
             selectedBranch: '',
             selectedContributor: null,
@@ -128,35 +134,46 @@ class App extends React.Component<{}, AppState> {
 
         if (!repositoryUrl.trim()) return;
 
-        this.setState({ analyzing: true, error: null });
+        this.setState({ analyzing: true, error: null, userStats: null, repositoryStats: null });
 
         try {
-            // Fetch branches first if we haven't yet
-            const { owner, repo } = GitHubService.parseUrl(repositoryUrl);
-            const branches = await GitHubService.fetchBranches(owner, repo);
+            // Detect URL type (user vs repository)
+            const urlInfo = GitHubUrlParser.detectUrlType(repositoryUrl);
 
-            // Call GitHub API directly from browser - each user gets their own rate limit
-            const stats = await GitHubService.fetchRepositoryStats(repositoryUrl, selectedBranch, timeFilter);
-            this.setState({
-                repositoryStats: stats,
-                branches,
-                analyzing: false,
-                showResults: true,
-            });
-
+            if (urlInfo.type === 'user' && urlInfo.username) {
+                // Fetch user statistics
+                const userStats = await GitHubService.fetchUserStats(urlInfo.username, timeFilter);
+                this.setState({
+                    userStats,
+                    analysisType: 'user',
+                    analyzing: false,
+                    showResults: true,
+                });
+            } else if (urlInfo.type === 'repo' && urlInfo.owner && urlInfo.repo) {
+                // Fetch repository statistics
+                const branches = await GitHubService.fetchBranches(urlInfo.owner, urlInfo.repo);
+                const stats = await GitHubService.fetchRepositoryStats(repositoryUrl, selectedBranch, timeFilter);
+                this.setState({
+                    repositoryStats: stats,
+                    branches,
+                    analysisType: 'repo',
+                    analyzing: false,
+                    showResults: true,
+                });
+            } else {
+                throw new Error('Invalid GitHub URL. Enter a username (e.g., octocat) or repository (e.g., facebook/react)');
+            }
         } catch (error: any) {
-            const message = error.message || 'Failed to analyze repository';
+            const message = error.message || 'Failed to analyze';
 
             // Check for rate limit error
             if (message.toLowerCase().includes('rate limit')) {
                 if (githubToken) {
-                    // User has token but still hit rate limit
                     this.addToast('warning', 'Rate Limit Exceeded',
                         'GitHub API rate limit reached. Please wait before trying again.',
                         10000
                     );
                 } else {
-                    // User has no token - suggest adding one
                     this.addToast('warning', 'Rate Limit Exceeded',
                         'GitHub API rate limit reached (60/hour). Add a personal token for 5,000/hour!',
                         0,
@@ -213,9 +230,9 @@ class App extends React.Component<{}, AppState> {
                     <div className="hero-icon" aria-hidden="true">
                         <GitBranch className="w-10 h-10" />
                     </div>
-                    <h1 className="hero-title">PR Analyzer</h1>
+                    <h1 className="hero-title">GSoC Espionage</h1>
                     <p className="hero-subtitle">
-                        Get detailed insights about contributors, code quality, and PR metrics for any GitHub repository
+                        Get detailed insights about GitHub users and repositories. Track PR activity, contributor stats, and code metrics.
                     </p>
                 </div>
 
@@ -226,11 +243,11 @@ class App extends React.Component<{}, AppState> {
                         <input
                             type="text"
                             className="search-input"
-                            placeholder="Enter GitHub repository URL (e.g., facebook/react)"
+                            placeholder="Enter username (octocat) or repo (facebook/react)"
                             value={repositoryUrl}
                             onChange={this.handleUrlChange}
                             disabled={analyzing}
-                            aria-label="GitHub repository URL"
+                            aria-label="GitHub username or repository URL"
                         />
                     </div>
 
@@ -368,7 +385,7 @@ class App extends React.Component<{}, AppState> {
     }
 
     private renderResults(): React.ReactNode {
-        const { repositoryStats, selectedContributor, repositoryUrl, timeFilter, analyzing, error } = this.state;
+        const { repositoryStats, userStats, analysisType, selectedContributor, repositoryUrl, timeFilter, analyzing, error } = this.state;
 
         return (
             <div className="results-container">
@@ -379,7 +396,7 @@ class App extends React.Component<{}, AppState> {
                         <input
                             type="text"
                             className="search-input"
-                            placeholder="Enter GitHub repository URL"
+                            placeholder="Enter username or repo (e.g., octocat, facebook/react)"
                             value={repositoryUrl}
                             onChange={this.handleUrlChange}
                             disabled={analyzing}
@@ -423,7 +440,7 @@ class App extends React.Component<{}, AppState> {
                 )}
 
                 {/* Results */}
-                {repositoryStats && !analyzing && (
+                {analysisType === 'repo' && repositoryStats && !analyzing && (
                     <div className="results-content">
                         {/* Export Buttons */}
                         <div className="export-buttons">
@@ -452,6 +469,13 @@ class App extends React.Component<{}, AppState> {
                             contributors={repositoryStats.contributors}
                             onContributorClick={this.handleContributorClick}
                         />
+                    </div>
+                )}
+
+                {/* User Analytics Results */}
+                {analysisType === 'user' && userStats && !analyzing && (
+                    <div className="results-content">
+                        <UserAnalytics userStats={userStats} />
                     </div>
                 )}
 

@@ -227,4 +227,94 @@ export const GitHubUrlParser = {
   toUrl(owner: string, repo: string): string {
     return `https://github.com/${owner}/${repo}`;
   },
+
+  /**
+   * Detects whether a GitHub URL points to a user profile or repository.
+   *
+   * User profile URLs: github.com/username (single path segment)
+   * Repository URLs: github.com/owner/repo (two path segments)
+   *
+   * @param {string} url - The GitHub URL to analyze
+   * @returns {{ type: 'user' | 'repo' | 'unknown', username?: string, owner?: string, repo?: string }}
+   *
+   * @example
+   * ```typescript
+   * GitHubUrlParser.detectUrlType('github.com/octocat');
+   * // Returns: { type: 'user', username: 'octocat' }
+   *
+   * GitHubUrlParser.detectUrlType('facebook/react');
+   * // Returns: { type: 'repo', owner: 'facebook', repo: 'react' }
+   * ```
+   */
+  detectUrlType(url: string): {
+    type: "user" | "repo" | "unknown";
+    username?: string;
+    owner?: string;
+    repo?: string;
+  } {
+    try {
+      let normalizedUrl = url.trim();
+
+      if (!normalizedUrl) {
+        return { type: "unknown" };
+      }
+
+      // Remove trailing slashes and .git extension
+      normalizedUrl = normalizedUrl.replace(/\.git\/?$/, "").replace(/\/$/, "");
+
+      // Check for SSH format (always a repo)
+      if (SSH_FORMAT_REGEX.test(normalizedUrl)) {
+        const match = normalizedUrl.match(SSH_FORMAT_REGEX);
+        if (match) {
+          return { type: "repo", owner: match[1], repo: match[2] };
+        }
+      }
+
+      // Check for simple owner/repo format (two segments = repo)
+      if (SIMPLE_FORMAT_REGEX.test(normalizedUrl)) {
+        const [owner, repo] = normalizedUrl.split("/");
+        return { type: "repo", owner, repo };
+      }
+
+      // Check for single segment (username only)
+      const singleSegmentRegex = new RegExp(`^${GITHUB_NAME_PATTERN}$`);
+      if (singleSegmentRegex.test(normalizedUrl)) {
+        return { type: "user", username: normalizedUrl };
+      }
+
+      // Check for github.com/username (single path segment = user)
+      const userUrlRegex = new RegExp(
+        `^(?:https?://)?github\\.com/(${GITHUB_NAME_PATTERN})/?$`
+      );
+      const userMatch = normalizedUrl.match(userUrlRegex);
+      if (userMatch) {
+        return { type: "user", username: userMatch[1] };
+      }
+
+      // Check for github.com/owner/repo... (two+ path segments = repo)
+      if (!normalizedUrl.startsWith("http")) {
+        normalizedUrl = "https://" + normalizedUrl;
+      }
+
+      const urlObj = new URL(normalizedUrl);
+      if (!urlObj.hostname.endsWith("github.com")) {
+        return { type: "unknown" };
+      }
+
+      const pathParts = urlObj.pathname.split("/").filter(Boolean);
+
+      if (pathParts.length === 1) {
+        // Single path = user profile
+        return { type: "user", username: pathParts[0] };
+      } else if (pathParts.length >= 2) {
+        // Two+ paths = repository
+        return { type: "repo", owner: pathParts[0], repo: pathParts[1] };
+      }
+
+      return { type: "unknown" };
+    } catch (err) {
+      console.warn("Error detecting URL type:", err, url);
+      return { type: "unknown" };
+    }
+  },
 };
