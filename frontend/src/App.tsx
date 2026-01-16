@@ -1,4 +1,4 @@
-import { ArrowRight, ChevronDown, ChevronUp, Download, GitBranch, Key, Moon, Search, Sun } from 'lucide-react';
+import { ArrowLeft, ArrowRight, ChevronDown, ChevronUp, Download, GitBranch, Key, Moon, Search, Sun } from 'lucide-react';
 import React from 'react';
 import { ErrorBoundary, Loader, ToastAction, ToastContainer, ToastData, createToast } from './components/common';
 import { ContributorList, ContributorModal } from './components/contributors';
@@ -20,6 +20,7 @@ interface AppState {
     repositoryStats: RepositoryStatsType | null;
     userStats: UserProfileStats | null;
     analysisType: 'repo' | 'user' | null;
+    previousAnalysis: { type: 'repo' | 'user'; url: string } | null;
     branches: string[];
     selectedBranch: string;
     selectedContributor: ContributorStats | null;
@@ -55,6 +56,7 @@ class App extends React.Component<{}, AppState> {
             repositoryStats: null,
             userStats: null,
             analysisType: null,
+            previousAnalysis: null,
             branches: [],
             selectedBranch: '',
             selectedContributor: null,
@@ -164,7 +166,17 @@ class App extends React.Component<{}, AppState> {
                 throw new Error('Invalid GitHub URL. Enter a username (e.g., octocat) or repository (e.g., facebook/react)');
             }
         } catch (error: any) {
-            const message = error.message || 'Failed to analyze';
+            let message = error.message || 'Failed to analyze';
+
+            // Improve error messages based on URL type
+            const urlInfo = GitHubUrlParser.detectUrlType(repositoryUrl);
+            if (message.toLowerCase().includes('not found')) {
+                if (urlInfo.type === 'user') {
+                    message = `User "${urlInfo.username}" not found on GitHub`;
+                } else if (urlInfo.type === 'repo') {
+                    message = `Repository "${urlInfo.owner}/${urlInfo.repo}" not found on GitHub`;
+                }
+            }
 
             // Check for rate limit error
             if (message.toLowerCase().includes('rate limit')) {
@@ -197,6 +209,36 @@ class App extends React.Component<{}, AppState> {
 
     private closeContributorModal = (): void => {
         this.setState({ selectedContributor: null });
+    };
+
+    /**
+     * Analyze a user's full profile (from contributor modal)
+     */
+    private handleAnalyzeUser = async (username: string): Promise<void> => {
+        const { repositoryUrl, analysisType } = this.state;
+
+        // Save current state for back navigation
+        if (analysisType) {
+            this.setState({ previousAnalysis: { type: analysisType, url: repositoryUrl } });
+        }
+
+        // Set the username as the new URL and trigger analysis
+        this.setState({ repositoryUrl: username }, () => {
+            // Create a synthetic form event to trigger submit
+            this.handleSubmit({ preventDefault: () => { } } as React.FormEvent);
+        });
+    };
+
+    /**
+     * Go back to previous analysis
+     */
+    private handleGoBack = async (): Promise<void> => {
+        const { previousAnalysis } = this.state;
+        if (!previousAnalysis) return;
+
+        this.setState({ repositoryUrl: previousAnalysis.url, previousAnalysis: null }, () => {
+            this.handleSubmit({ preventDefault: () => { } } as React.FormEvent);
+        });
     };
 
     private addToast = (type: 'success' | 'error' | 'warning' | 'info', title: string, message: string, duration?: number, action?: ToastAction): void => {
@@ -243,7 +285,7 @@ class App extends React.Component<{}, AppState> {
                         <input
                             type="text"
                             className="search-input"
-                            placeholder="Enter username (octocat) or repo (facebook/react)"
+                            placeholder="github.com/username or github.com/owner/repo"
                             value={repositoryUrl}
                             onChange={this.handleUrlChange}
                             disabled={analyzing}
@@ -475,6 +517,17 @@ class App extends React.Component<{}, AppState> {
                 {/* User Analytics Results */}
                 {analysisType === 'user' && userStats && !analyzing && (
                     <div className="results-content">
+                        {/* Back Button */}
+                        {this.state.previousAnalysis && (
+                            <button
+                                type="button"
+                                className="back-button"
+                                onClick={this.handleGoBack}
+                            >
+                                <ArrowLeft className="w-4 h-4" aria-hidden="true" />
+                                Back to Repository
+                            </button>
+                        )}
                         <UserAnalytics userStats={userStats} />
                     </div>
                 )}
@@ -484,6 +537,7 @@ class App extends React.Component<{}, AppState> {
                     isOpen={selectedContributor !== null}
                     onClose={this.closeContributorModal}
                     repoFilter={repositoryStats ? `${repositoryStats.owner}/${repositoryStats.repo}` : undefined}
+                    onAnalyzeUser={this.handleAnalyzeUser}
                 />
             </div>
         );
