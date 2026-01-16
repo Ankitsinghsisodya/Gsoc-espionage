@@ -1,8 +1,8 @@
-# 🔍 PR Analyzer
+# �️ GSoC Espionage
 
-> **Comprehensive GitHub Pull Request analytics with contributor insights**
+> **GitHub PR Analytics & Contributor Insights for GSoC Participant Tracking**
 
-A modern, frontend-only React application that provides detailed insights into GitHub repository pull requests, contributor activity, and code metrics.
+A modern, frontend-only React application that provides detailed insights into GitHub repository pull requests, contributor activity, and code metrics. Perfect for tracking Google Summer of Code participants and open source contributions.
 
 ![TypeScript](https://img.shields.io/badge/TypeScript-007ACC?style=for-the-badge&logo=typescript&logoColor=white)
 ![React](https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB)
@@ -141,8 +141,8 @@ sequenceDiagram
 
 ```bash
 # Clone the repository
-git clone https://github.com/your-username/pr-analyzer.git
-cd pr-analyzer/frontend
+git clone https://github.com/Ankitsinghsisodya/Gsoc-espionage.git
+cd Gsoc-espionage/frontend
 
 # Install dependencies
 npm install
