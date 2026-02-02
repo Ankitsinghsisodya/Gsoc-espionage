@@ -66,7 +66,7 @@ class App extends React.Component<{}, AppState> {
             selectedContributor: null,
             theme: ThemeService.getTheme(),
             repositoryUrl: '',
-            timeFilter: '1m',
+            timeFilter: '3m',
             showResults: false,
             toasts: [],
             githubToken: this.loadGitHubToken(),
