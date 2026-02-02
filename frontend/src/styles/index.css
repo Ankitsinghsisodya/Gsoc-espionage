@@ -798,6 +798,83 @@ body {
   box-shadow: 0 6px 20px rgba(35, 134, 54, 0.4);
 }
 
+/* Autocomplete dropdown */
+.chat-input-autocomplete {
+  position: absolute;
+  bottom: 100%;
+  left: 0;
+  right: 0;
+  background: var(--bg-elevated);
+  border: 1px solid var(--border-default);
+  border-radius: 12px;
+  margin-bottom: 8px;
+  max-height: 280px;
+  overflow-y: auto;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+  animation: slideUp 0.2s ease;
+  z-index: 20;
+}
+
+.chat-input-autocomplete-header {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 10px 14px;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--text-muted);
+  border-bottom: 1px solid var(--border-muted);
+}
+
+.chat-input-autocomplete-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 14px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.chat-input-autocomplete-item:hover,
+.chat-input-autocomplete-item.highlighted {
+  background: var(--bg-tertiary);
+}
+
+.chat-input-autocomplete-text {
+  flex: 1;
+  font-size: 14px;
+  color: var(--text-primary);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.chat-input-autocomplete-remove {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4px;
+  background: transparent;
+  border: none;
+  border-radius: 4px;
+  color: var(--text-muted);
+  cursor: pointer;
+  opacity: 0;
+  transition: all 0.15s ease;
+}
+
+.chat-input-autocomplete-item:hover .chat-input-autocomplete-remove,
+.chat-input-autocomplete-item.highlighted .chat-input-autocomplete-remove {
+  opacity: 1;
+}
+
+.chat-input-autocomplete-remove:hover {
+  background: rgba(248, 81, 73, 0.15);
+  color: #f85149;
+}
+
 /* ===========================================
    RESULTS AREA
    =========================================== */
@@ -1252,6 +1329,87 @@ body {
 
 .search-input::placeholder {
   color: var(--text-muted);
+}
+
+/* Search Autocomplete Dropdown */
+.search-autocomplete {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  background: var(--bg-elevated);
+  border: 1px solid var(--border-default);
+  border-radius: 12px;
+  margin-top: 8px;
+  max-height: 280px;
+  overflow-y: auto;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+  animation: slideUp 0.2s ease;
+  z-index: 50;
+}
+
+.search-autocomplete-header {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 10px 14px;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--text-muted);
+  border-bottom: 1px solid var(--border-muted);
+}
+
+.search-autocomplete-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 14px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.search-autocomplete-item:hover,
+.search-autocomplete-item.highlighted {
+  background: var(--bg-tertiary);
+}
+
+.search-autocomplete-text {
+  flex: 1;
+  font-size: 14px;
+  color: var(--text-primary);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.search-autocomplete-remove {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  padding: 0;
+  background: transparent;
+  border: none;
+  border-radius: 4px;
+  color: var(--text-muted);
+  cursor: pointer;
+  opacity: 0;
+  font-size: 16px;
+  line-height: 1;
+  transition: all 0.15s ease;
+}
+
+.search-autocomplete-item:hover .search-autocomplete-remove,
+.search-autocomplete-item.highlighted .search-autocomplete-remove {
+  opacity: 1;
+}
+
+.search-autocomplete-remove:hover {
+  background: rgba(248, 81, 73, 0.15);
+  color: #f85149;
 }
 
 .search-options {

@@ -123,13 +123,13 @@ class StorageServiceClass {
     type: "repository" | "user",
     targetUrl: string,
     targetName: string,
-    notes?: string
+    notes?: string,
   ): Bookmark {
     const bookmarks = this.getBookmarks();
 
     // Check for existing bookmark
     const existing = bookmarks.find(
-      (bookmark) => bookmark.targetUrl === targetUrl
+      (bookmark) => bookmark.targetUrl === targetUrl,
     );
     if (existing) {
       throw new BookmarkExistsError(targetUrl);
@@ -228,7 +228,7 @@ class StorageServiceClass {
     analysisType: "repository" | "user",
     summary: { totalPRs: number; contributors: number; mergedPRs: number },
     branch?: string,
-    timeFilter: TimeFilter = "1m"
+    timeFilter: TimeFilter = "1m",
   ): AnalysisHistory {
     const history = this.getAllHistory();
 
@@ -244,7 +244,7 @@ class StorageServiceClass {
 
     // Remove existing entry for same URL (will be re-added at front)
     const filtered = history.filter(
-      (item) => item.repositoryUrl !== repositoryUrl
+      (item) => item.repositoryUrl !== repositoryUrl,
     );
     filtered.unshift(entry);
 
@@ -280,6 +280,107 @@ class StorageServiceClass {
   }
 
   // ============================================================================
+  // Recent Searches Operations (for autocomplete)
+  // ============================================================================
+
+  /**
+   * Retrieves recent search queries for autocomplete.
+   *
+   * @param {string} [filterPrefix] - Optional prefix to filter searches (case-insensitive)
+   * @returns {string[]} Array of recent search queries, newest first
+   *
+   * @example
+   * ```typescript
+   * // Get all recent searches
+   * const searches = StorageService.getRecentSearches();
+   *
+   * // Get searches matching a prefix
+   * const filtered = StorageService.getRecentSearches('facebook');
+   * ```
+   */
+  public getRecentSearches(filterPrefix?: string): string[] {
+    try {
+      const data = localStorage.getItem(STORAGE_KEYS.RECENT_SEARCHES);
+      const searches: string[] = data ? JSON.parse(data) : [];
+
+      if (filterPrefix) {
+        const prefix = filterPrefix.toLowerCase();
+        return searches.filter((s) => s.toLowerCase().includes(prefix));
+      }
+
+      return searches;
+    } catch {
+      return [];
+    }
+  }
+
+  /**
+   * Adds a search query to recent searches.
+   * If the query already exists, it's moved to the front (most recent).
+   * Empty or whitespace-only queries are ignored.
+   *
+   * @param {string} query - The search query to add
+   * @returns {void}
+   *
+   * @example
+   * ```typescript
+   * StorageService.addRecentSearch('facebook/react');
+   * ```
+   */
+  public addRecentSearch(query: string): void {
+    const trimmedQuery = query.trim();
+    if (!trimmedQuery) return;
+
+    const searches = this.getRecentSearches();
+
+    // Remove existing entry if present (will be re-added at front)
+    const filtered = searches.filter(
+      (s) => s.toLowerCase() !== trimmedQuery.toLowerCase(),
+    );
+
+    // Add to front
+    filtered.unshift(trimmedQuery);
+
+    // Limit total count
+    this.saveRecentSearches(
+      filtered.slice(0, PAGINATION_CONFIG.MAX_RECENT_SEARCHES),
+    );
+  }
+
+  /**
+   * Removes a specific search query from recent searches.
+   *
+   * @param {string} query - The exact query to remove
+   * @returns {void}
+   *
+   * @example
+   * ```typescript
+   * StorageService.removeRecentSearch('facebook/react');
+   * ```
+   */
+  public removeRecentSearch(query: string): void {
+    const searches = this.getRecentSearches();
+    const filtered = searches.filter(
+      (s) => s.toLowerCase() !== query.toLowerCase(),
+    );
+    this.saveRecentSearches(filtered);
+  }
+
+  /**
+   * Clears all recent search queries.
+   *
+   * @returns {void}
+   *
+   * @example
+   * ```typescript
+   * StorageService.clearRecentSearches();
+   * ```
+   */
+  public clearRecentSearches(): void {
+    localStorage.removeItem(STORAGE_KEYS.RECENT_SEARCHES);
+  }
+
+  // ============================================================================
   // Private Helpers
   // ============================================================================
 
@@ -310,6 +411,17 @@ class StorageServiceClass {
    */
   private saveHistory(history: AnalysisHistory[]): void {
     localStorage.setItem(STORAGE_KEYS.HISTORY, JSON.stringify(history));
+  }
+
+  /**
+   * Saves recent searches to localStorage.
+   * @private
+   */
+  private saveRecentSearches(searches: string[]): void {
+    localStorage.setItem(
+      STORAGE_KEYS.RECENT_SEARCHES,
+      JSON.stringify(searches),
+    );
   }
 
   /**

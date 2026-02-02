@@ -4,7 +4,7 @@ import { ErrorBoundary, Loader, ToastAction, ToastContainer, ToastData, createTo
 import { ContributorList, ContributorModal } from './components/contributors';
 import { RepositoryStats } from './components/repository';
 import { UserAnalytics } from './components/user';
-import { ExportService, GitHubService, Theme, ThemeService } from './services';
+import { ExportService, GitHubService, StorageService, Theme, ThemeService } from './services';
 import { ContributorStats, RepositoryStats as RepositoryStatsType, TimeFilter, UserProfileStats } from './types';
 import { GitHubUrlParser } from './utils';
 
@@ -31,6 +31,9 @@ interface AppState {
     toasts: ToastData[];
     githubToken: string;
     showTokenInput: boolean;
+    showAutocomplete: boolean;
+    recentSearches: string[];
+    highlightedIndex: number;
 }
 
 const TIME_FILTERS: { value: TimeFilter; label: string }[] = [
@@ -67,6 +70,9 @@ class App extends React.Component<{}, AppState> {
             toasts: [],
             githubToken: this.loadGitHubToken(),
             showTokenInput: false,
+            showAutocomplete: false,
+            recentSearches: [],
+            highlightedIndex: -1,
         };
     }
 
@@ -79,7 +85,33 @@ class App extends React.Component<{}, AppState> {
 
         // Listen for browser back/forward button
         window.addEventListener('popstate', this.handlePopState);
+
+        // Parse URL parameters to auto-fill search box
+        this.parseUrlAndFillSearch();
     }
+
+    /**
+     * Parse URL query parameters and fill search box
+     */
+    private parseUrlAndFillSearch = (): void => {
+        const urlParams = new URLSearchParams(window.location.search);
+        const userParam = urlParams.get('user');
+        const repoParam = urlParams.get('repo');
+
+        if (userParam) {
+            // For user URLs, set the username
+            this.setState({ repositoryUrl: userParam }, () => {
+                // Auto-submit the search
+                this.handleSubmit({ preventDefault: () => { } } as React.FormEvent);
+            });
+        } else if (repoParam) {
+            // For repo URLs, construct the GitHub URL format
+            this.setState({ repositoryUrl: repoParam }, () => {
+                // Auto-submit the search
+                this.handleSubmit({ preventDefault: () => { } } as React.FormEvent);
+            });
+        }
+    };
 
     public componentWillUnmount(): void {
         if (this.themeUnsubscribe) {
@@ -142,7 +174,79 @@ class App extends React.Component<{}, AppState> {
     };
 
     private handleUrlChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
-        this.setState({ repositoryUrl: e.target.value });
+        this.setState({
+            repositoryUrl: e.target.value,
+            showAutocomplete: true,
+            highlightedIndex: -1
+        });
+    };
+
+    private loadRecentSearches = (): void => {
+        const searches = StorageService.getRecentSearches();
+        this.setState({
+            recentSearches: searches,
+            showAutocomplete: searches.length > 0
+        });
+    };
+
+    private getFilteredSearches = (): string[] => {
+        const { repositoryUrl, recentSearches } = this.state;
+        if (!repositoryUrl.trim()) {
+            return recentSearches;
+        }
+        return recentSearches.filter(s =>
+            s.toLowerCase().includes(repositoryUrl.toLowerCase())
+        );
+    };
+
+    private handleSearchInputFocus = (): void => {
+        this.loadRecentSearches();
+    };
+
+    private selectSuggestion = (suggestion: string): void => {
+        this.setState({
+            repositoryUrl: suggestion,
+            showAutocomplete: false,
+            highlightedIndex: -1
+        });
+    };
+
+    private removeSuggestion = (e: React.MouseEvent, suggestion: string): void => {
+        e.stopPropagation();
+        StorageService.removeRecentSearch(suggestion);
+        this.loadRecentSearches();
+    };
+
+    private handleSearchInputKeyDown = (e: React.KeyboardEvent): void => {
+        const { showAutocomplete, highlightedIndex } = this.state;
+        const filteredSearches = this.getFilteredSearches();
+
+        if (showAutocomplete && filteredSearches.length > 0) {
+            if (e.key === 'ArrowDown') {
+                e.preventDefault();
+                this.setState({
+                    highlightedIndex: Math.min(highlightedIndex + 1, filteredSearches.length - 1)
+                });
+                return;
+            }
+            if (e.key === 'ArrowUp') {
+                e.preventDefault();
+                this.setState({
+                    highlightedIndex: Math.max(highlightedIndex - 1, -1)
+                });
+                return;
+            }
+            if (e.key === 'Escape') {
+                e.preventDefault();
+                this.setState({ showAutocomplete: false, highlightedIndex: -1 });
+                return;
+            }
+            if (e.key === 'Enter' && highlightedIndex >= 0) {
+                e.preventDefault();
+                this.selectSuggestion(filteredSearches[highlightedIndex]);
+                return;
+            }
+        }
     };
 
     private handleTimeFilterChange = (e: React.ChangeEvent<HTMLSelectElement>): void => {
@@ -173,6 +277,9 @@ class App extends React.Component<{}, AppState> {
                 // Push to browser history for back button support
                 window.history.pushState({ url: repositoryUrl, type: 'user' }, '', `?user=${urlInfo.username}`);
 
+                // Save to recent searches
+                StorageService.addRecentSearch(repositoryUrl.trim());
+
                 this.setState({
                     userStats,
                     analysisType: 'user',
@@ -186,6 +293,9 @@ class App extends React.Component<{}, AppState> {
 
                 // Push to browser history for back button support
                 window.history.pushState({ url: repositoryUrl, type: 'repo' }, '', `?repo=${urlInfo.owner}/${urlInfo.repo}`);
+
+                // Save to recent searches
+                StorageService.addRecentSearch(repositoryUrl.trim());
 
                 this.setState({
                     repositoryStats: stats,
@@ -320,9 +430,39 @@ class App extends React.Component<{}, AppState> {
                             placeholder="github.com/username or github.com/owner/repo"
                             value={repositoryUrl}
                             onChange={this.handleUrlChange}
+                            onFocus={this.handleSearchInputFocus}
+                            onKeyDown={this.handleSearchInputKeyDown}
                             disabled={analyzing}
                             aria-label="GitHub username or repository URL"
+                            autoComplete="off"
                         />
+
+                        {/* Autocomplete dropdown */}
+                        {this.state.showAutocomplete && this.getFilteredSearches().length > 0 && (
+                            <div className="search-autocomplete">
+                                <div className="search-autocomplete-header">
+                                    <span>Recent searches</span>
+                                </div>
+                                {this.getFilteredSearches().map((suggestion, index) => (
+                                    <div
+                                        key={suggestion}
+                                        className={`search-autocomplete-item ${index === this.state.highlightedIndex ? 'highlighted' : ''}`}
+                                        onClick={() => this.selectSuggestion(suggestion)}
+                                        onMouseEnter={() => this.setState({ highlightedIndex: index })}
+                                    >
+                                        <span className="search-autocomplete-text">{suggestion}</span>
+                                        <button
+                                            type="button"
+                                            className="search-autocomplete-remove"
+                                            onClick={(e) => this.removeSuggestion(e, suggestion)}
+                                            title="Remove from history"
+                                        >
+                                            ×
+                                        </button>
+                                    </div>
+                                ))}
+                            </div>
+                        )}
                     </div>
 
                     <div className="search-options">

@@ -58,6 +58,9 @@ export const STORAGE_KEYS = {
 
   /** Analysis history */
   HISTORY: "pr_analyzer_history",
+
+  /** Recent search queries for autocomplete */
+  RECENT_SEARCHES: "pr_analyzer_recent_searches",
 } as const;
 
 /**
@@ -86,6 +89,9 @@ export const PAGINATION_CONFIG = {
 
   /** Maximum recent analyses to display */
   MAX_RECENT: 10,
+
+  /** Maximum recent searches to store for autocomplete */
+  MAX_RECENT_SEARCHES: 15,
 } as const;
 
 /**
