@@ -30,6 +30,7 @@ const TIME_FILTERS: { value: TimeFilter; label: string }[] = [
     { value: '1m', label: '1 Month' },
     { value: '3m', label: '3 Months' },
     { value: '6m', label: '6 Months' },
+    { value: '12m', label: '12 Months' },
     { value: 'all', label: 'All Time' },
 ];
 
@@ -136,8 +137,8 @@ export class RepositoryForm extends React.Component<RepositoryFormProps, Reposit
                                     onClick={() => this.handleFilterChange(tf.value)}
                                     disabled={loading}
                                     className={`px-3 py-2 text-sm font-medium transition-colors ${filter === tf.value
-                                            ? 'bg-primary-500 text-white'
-                                            : 'bg-dark-700 text-gray-400 hover:text-white'
+                                        ? 'bg-primary-500 text-white'
+                                        : 'bg-dark-700 text-gray-400 hover:text-white'
                                         }`}
                                 >
                                     {tf.label}

@@ -1,7 +1,7 @@
 /**
  * Time filter options
  */
-export type TimeFilter = "2w" | "1m" | "3m" | "6m" | "all";
+export type TimeFilter = "2w" | "1m" | "3m" | "6m" | "12m" | "all";
 
 /**
  * Pull request interface

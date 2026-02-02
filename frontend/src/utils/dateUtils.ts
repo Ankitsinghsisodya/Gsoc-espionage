@@ -36,6 +36,8 @@ export const DateUtils = {
         return new Date(now.setMonth(now.getMonth() - 3));
       case "6m":
         return new Date(now.setMonth(now.getMonth() - 6));
+      case "12m":
+        return new Date(now.setMonth(now.getMonth() - 12));
       case "all":
         // GitHub's founding year - practical lower bound
         return new Date("2008-01-01");
