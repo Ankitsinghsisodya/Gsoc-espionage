@@ -1,15 +1,28 @@
 import { ArrowLeft, ArrowRight, Building2, ChevronDown, ChevronUp, Download, GitBranch, Key, Moon, Search, Sun } from 'lucide-react';
-import React from 'react';
+import React, { Suspense } from 'react';
+import { Helmet } from 'react-helmet-async';
+import { NavigateFunction, useLocation, useNavigate } from 'react-router-dom';
 import { ErrorBoundary, Loader, ToastAction, ToastContainer, ToastData, createToast } from './components/common';
 import { ContributorList, ContributorModal } from './components/contributors';
-import { GsocOrgs } from './components/orgs';
 import { RepositoryStats } from './components/repository';
 import { UserAnalytics } from './components/user';
 import { ExportService, GitHubService, StorageService, Theme, ThemeService } from './services';
 import { ContributorStats, RepositoryStats as RepositoryStatsType, TimeFilter, UserProfileStats } from './types';
 import { GitHubUrlParser } from './utils';
 
+// Lazy-loaded: keeps initial bundle lean; org JSON (~500 KB) loads only on demand
+const GsocOrgs = React.lazy(() =>
+    import('./components/orgs').then(m => ({ default: m.GsocOrgs }))
+);
 
+
+
+interface AppProps {
+    /** Provided by AppWithRouter wrapper when React Router is present */
+    navigate?: NavigateFunction;
+    /** Current pathname from React Router (e.g. '/', '/orgs') */
+    locationPathname?: string;
+}
 
 /**
  * Main application state
@@ -50,10 +63,10 @@ const TIME_FILTERS: { value: TimeFilter; label: string }[] = [
 /**
  * Main application component with dashboard-style UI
  */
-class App extends React.Component<{}, AppState> {
+class App extends React.Component<AppProps, AppState> {
     private themeUnsubscribe: (() => void) | null = null;
 
-    constructor(props: {}) {
+    constructor(props: AppProps) {
         super(props);
         this.state = {
             loading: false,
@@ -76,7 +89,8 @@ class App extends React.Component<{}, AppState> {
             showAutocomplete: false,
             recentSearches: [],
             highlightedIndex: -1,
-            showOrgsView: false,
+            // Derive initial orgs view from router location prop (or fallback to pathname)
+            showOrgsView: (props.locationPathname ?? window.location.pathname) === '/orgs',
         };
     }
 
@@ -87,17 +101,19 @@ class App extends React.Component<{}, AppState> {
             this.setState({ theme });
         });
 
-        // Listen for browser back/forward button
+        // Popstate handles back/forward for ?user= and ?repo= query-param deep links
         window.addEventListener('popstate', this.handlePopState);
 
-        // Check if orgs view is requested via URL
-        const urlParams = new URLSearchParams(window.location.search);
-        if (urlParams.get('view') === 'orgs') {
-            this.setState({ showOrgsView: true });
-            document.title = 'GSoC 2026 Organizations — 185 Orgs | gsoc.app';
-        } else {
-            // Parse URL parameters to auto-fill search box
+        // Auto-fill search box from URL query params (only when not on orgs view)
+        if (!this.state.showOrgsView) {
             this.parseUrlAndFillSearch();
+        }
+    }
+
+    public componentDidUpdate(prevProps: AppProps): void {
+        // Sync orgs view state when React Router navigates (back/forward buttons)
+        if (prevProps.locationPathname !== this.props.locationPathname) {
+            this.setState({ showOrgsView: this.props.locationPathname === '/orgs' });
         }
     }
 
@@ -132,29 +148,23 @@ class App extends React.Component<{}, AppState> {
     }
 
     /**
-     * Handle browser back/forward button
+     * Handle browser back/forward for ?user= / ?repo= deep-link navigation.
+     * Orgs ↔ home navigation is handled by React Router via componentDidUpdate.
      */
     private handlePopState = (event: PopStateEvent): void => {
-        if (event.state?.view === 'orgs') {
-            this.setState({ showOrgsView: true });
-            document.title = 'GSoC 2026 Organizations — 185 Orgs | gsoc.app';
-        } else if (event.state?.url) {
-            this.setState({ showOrgsView: false });
-            document.title = 'GSoC 2026 Organizations & PR Analytics | gsoc.app';
+        if (event.state?.url) {
             this.setState({ repositoryUrl: event.state.url }, () => {
                 this.handleSubmit({ preventDefault: () => { } } as React.FormEvent);
             });
-        } else {
-            // No state = go to home
+        } else if (!event.state?.view) {
+            // No state = go to home (PR analytics)
             this.setState({
-                showOrgsView: false,
                 showResults: false,
                 repositoryStats: null,
                 userStats: null,
                 analysisType: null,
                 previousAnalysis: null,
             });
-            document.title = 'GSoC 2026 Organizations & PR Analytics | gsoc.app';
         }
     };
 
@@ -748,14 +758,12 @@ class App extends React.Component<{}, AppState> {
                         className={`orgs-mode-toggle ${showOrgsView ? 'active' : ''}`}
                         onClick={() => {
                             const next = !showOrgsView;
-                            if (next) {
-                                window.history.pushState({ view: 'orgs' }, '', '?view=orgs');
-                                document.title = 'GSoC 2026 Organizations — 185 Orgs | gsoc.app';
+                            if (this.props.navigate) {
+                                // Let React Router drive navigation (updates location prop → componentDidUpdate syncs state)
+                                this.props.navigate(next ? '/orgs' : '/');
                             } else {
-                                window.history.pushState({}, '', '/');
-                                document.title = 'GSoC 2026 Organizations & PR Analytics | gsoc.app';
+                                this.setState({ showOrgsView: next });
                             }
-                            this.setState({ showOrgsView: next });
                         }}
                         title={showOrgsView ? 'Switch to PR Analytics' : 'View GSoC 2026 Organizations'}
                         aria-label="Toggle between PR analytics and GSoC 2026 organizations"
@@ -784,7 +792,15 @@ class App extends React.Component<{}, AppState> {
 
                     <main className="main-content">
                         {showOrgsView
-                            ? <GsocOrgs />
+                            ? (
+                                <Suspense fallback={
+                                    <div className="loading-container">
+                                        <Loader size="lg" message="Loading organizations..." />
+                                    </div>
+                                }>
+                                    <GsocOrgs />
+                                </Suspense>
+                            )
                             : (showResults ? this.renderResults() : this.renderHero())
                         }
                     </main>
@@ -797,4 +813,53 @@ class App extends React.Component<{}, AppState> {
     }
 }
 
-export default App;
+/**
+ * Thin functional wrapper that feeds React Router context into the class component.
+ * Helmet here manages the per-route <title>, <meta description>, and <link canonical>
+ * so every route gets unique, crawlable meta without touching the class component.
+ */
+function AppWithRouter() {
+    const navigate = useNavigate();
+    const { pathname } = useLocation();
+    const isOrgs = pathname === '/orgs';
+
+    return (
+        <>
+            <Helmet>
+                <title>
+                    {isOrgs
+                        ? 'GSoC 2026 Organizations — 185 Orgs | gsoc.app'
+                        : 'GSoC 2026 PR Analytics & Contributor Insights | gsoc.app'}
+                </title>
+                <meta
+                    name="description"
+                    content={isOrgs
+                        ? 'Browse all 185 organizations participating in Google Summer of Code 2026, including 22 new ones. Find ideas lists, tech stacks, and contact information on gsoc.app.'
+                        : 'Analyze GitHub PR activity, contributor stats, merge rates, and code metrics for any repo. Track Google Summer of Code 2026 project contributions on gsoc.app.'}
+                />
+                <link rel="canonical" href={`https://gsoc.app${isOrgs ? '/orgs' : '/'}`} />
+                <meta property="og:title" content={isOrgs
+                    ? 'GSoC 2026 Organizations — 185 Orgs | gsoc.app'
+                    : 'GSoC 2026 PR Analytics & Contributor Insights | gsoc.app'}
+                />
+                <meta property="og:url" content={`https://gsoc.app${isOrgs ? '/orgs' : '/'}`} />
+                <meta property="og:description" content={isOrgs
+                    ? 'Browse all 185 GSoC 2026 organizations including 22 new ones. Find ideas lists, tech stacks, and contact information.'
+                    : 'Analyze GitHub PR activity, contributor stats, and code metrics. Track Google Summer of Code 2026 contributions.'}
+                />
+                <meta name="twitter:title" content={isOrgs
+                    ? 'GSoC 2026 Organizations — 185 Orgs | gsoc.app'
+                    : 'GSoC 2026 PR Analytics & Contributor Insights | gsoc.app'}
+                />
+                <meta name="twitter:url" content={`https://gsoc.app${isOrgs ? '/orgs' : '/'}`} />
+                <meta name="twitter:description" content={isOrgs
+                    ? 'Browse all 185 GSoC 2026 organizations including 22 new ones.'
+                    : 'Analyze GitHub PR activity and contributor stats for Google Summer of Code 2026 projects.'}
+                />
+            </Helmet>
+            <App navigate={navigate} locationPathname={pathname} />
+        </>
+    );
+}
+
+export default AppWithRouter;

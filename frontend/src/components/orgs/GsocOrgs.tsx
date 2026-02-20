@@ -16,6 +16,7 @@ import {
     Twitter,
 } from 'lucide-react';
 import React from 'react';
+import { Helmet } from 'react-helmet-async';
 import allOrgsData from '../../data/allOrgs2026.json';
 import newOrgsData from '../../data/newOrgs2026.json';
 
@@ -117,7 +118,41 @@ export class GsocOrgs extends React.Component<{}, GsocOrgsState> {
         const { activeTab, searchQuery } = this.state;
         const filtered = this.getFilteredOrgs();
 
+        // Schema.org ItemList — tells Google exactly which organizations are on this page.
+        // This is the highest-impact structured data for entity-based ranking.
+        const itemListSchema = {
+            '@context': 'https://schema.org',
+            '@type': 'ItemList',
+            name: 'GSoC 2026 Participating Organizations',
+            description: `All ${allOrgs.length} organizations participating in Google Summer of Code 2026, including ${newOrgs.length} new organizations.`,
+            url: 'https://gsoc.app/orgs',
+            numberOfItems: allOrgs.length,
+            itemListElement: allOrgs.map((org, idx) => ({
+                '@type': 'ListItem',
+                position: idx + 1,
+                item: {
+                    '@type': 'Organization',
+                    name: org.name,
+                    description: org.tagline || org.description,
+                    url: org.website_url ?? `https://summerofcode.withgoogle.com/programs/2026/organizations/${org.slug}`,
+                    ...(org.logo_url ? { logo: org.logo_url } : {}),
+                },
+            })),
+        };
+
         return (
+            <>
+            <Helmet>
+                <title>GSoC 2026 Organizations — {allOrgs.length} Orgs | gsoc.app</title>
+                <meta
+                    name="description"
+                    content={`Browse all ${allOrgs.length} organizations participating in Google Summer of Code 2026, including ${newOrgs.length} new ones. Find ideas lists, tech stacks, and contact information.`}
+                />
+                <link rel="canonical" href="https://gsoc.app/orgs" />
+                <script type="application/ld+json">
+                    {JSON.stringify(itemListSchema)}
+                </script>
+            </Helmet>
             <div className="gsoc-orgs-view">
                 {/* Header */}
                 <div className="gsoc-orgs-header">
@@ -370,6 +405,7 @@ export class GsocOrgs extends React.Component<{}, GsocOrgsState> {
                     </div>
                 )}
             </div>
+            </>
         );
     }
 }

@@ -14,7 +14,7 @@
 
   <!-- GSoC 2026 Organizations view -->
   <url>
-    <loc>https://gsoc.app/?view=orgs</loc>
+    <loc>https://gsoc.app/orgs</loc>
     <lastmod>2026-02-21</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
