@@ -1,7 +1,8 @@
-import { ArrowLeft, ArrowRight, ChevronDown, ChevronUp, Download, GitBranch, Key, Moon, Search, Sun } from 'lucide-react';
+import { ArrowLeft, ArrowRight, Building2, ChevronDown, ChevronUp, Download, GitBranch, Key, Moon, Search, Sun } from 'lucide-react';
 import React from 'react';
 import { ErrorBoundary, Loader, ToastAction, ToastContainer, ToastData, createToast } from './components/common';
 import { ContributorList, ContributorModal } from './components/contributors';
+import { GsocOrgs } from './components/orgs';
 import { RepositoryStats } from './components/repository';
 import { UserAnalytics } from './components/user';
 import { ExportService, GitHubService, StorageService, Theme, ThemeService } from './services';
@@ -34,6 +35,7 @@ interface AppState {
     showAutocomplete: boolean;
     recentSearches: string[];
     highlightedIndex: number;
+    showOrgsView: boolean;
 }
 
 const TIME_FILTERS: { value: TimeFilter; label: string }[] = [
@@ -74,6 +76,7 @@ class App extends React.Component<{}, AppState> {
             showAutocomplete: false,
             recentSearches: [],
             highlightedIndex: -1,
+            showOrgsView: false,
         };
     }
 
@@ -717,7 +720,7 @@ class App extends React.Component<{}, AppState> {
     }
 
     public render(): React.ReactNode {
-        const { loading, showResults } = this.state;
+        const { loading, showResults, showOrgsView } = this.state;
 
         if (loading) {
             return this.renderLoading();
@@ -726,7 +729,22 @@ class App extends React.Component<{}, AppState> {
         return (
             <ErrorBoundary>
                 <div className="app-layout no-sidebar">
-                    {/* Theme Toggle */}
+                    {/* GSoC Orgs Mode Toggle - top left */}
+                    <button
+                        className={`orgs-mode-toggle ${showOrgsView ? 'active' : ''}`}
+                        onClick={() => this.setState({ showOrgsView: !showOrgsView })}
+                        title={showOrgsView ? 'Switch to PR Analytics' : 'View GSoC 2026 Organizations'}
+                        aria-label="Toggle between PR analytics and GSoC 2026 organizations"
+                        aria-pressed={showOrgsView}
+                    >
+                        <span className="orgs-toggle-track" aria-hidden="true">
+                            <span className="orgs-toggle-thumb" />
+                        </span>
+                        <Building2 className="orgs-toggle-icon w-4 h-4" aria-hidden="true" />
+                        <span className="orgs-toggle-label">GSoC 2026 Orgs</span>
+                    </button>
+
+                    {/* Theme Toggle - top right */}
                     <button
                         className="theme-toggle-btn"
                         onClick={() => ThemeService.toggleTheme()}
@@ -741,7 +759,10 @@ class App extends React.Component<{}, AppState> {
                     </button>
 
                     <main className="main-content">
-                        {showResults ? this.renderResults() : this.renderHero()}
+                        {showOrgsView
+                            ? <GsocOrgs />
+                            : (showResults ? this.renderResults() : this.renderHero())
+                        }
                     </main>
 
                     {/* Toast Notifications */}

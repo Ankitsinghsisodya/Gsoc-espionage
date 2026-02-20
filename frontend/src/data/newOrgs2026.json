@@ -1,0 +1,1274 @@
+[
+  {
+    "name": "Boa",
+    "slug": "boa",
+    "logo_url": "https://summerofcode.withgoogle.com/media/org/boa/vhimc4zkw6j9t8wm-360.png",
+    "website_url": "https://boajs.dev/",
+    "tagline": "An ECMAScript engine written in Rust",
+    "license": "MIT",
+    "categories": [
+      "Programming languages",
+      "Web"
+    ],
+    "contributor_guidance_url": "https://boajs.dev/docs/contributing",
+    "description": "Boa is an open-source, embeddable JavaScript engine written in Rust. The project aims to provide a correct, safe, and performant implementation of the ECMAScript specification, with a strong focus on long-term maintainability and developer ergonomics.\n\nBoa is designed to be used as a library, enabling developers to embed JavaScript into Rust applications, tooling, and experimental runtimes. The project emphasizes clear internal architecture, rigorous testing, and close alignment with the evolving ECMAScript standard.\n\nDevelopment is community-driven and spans multiple areas of language runtime engineering, including parsing, bytecode compilation, virtual machine execution, garbage collection, performance optimization, and specification conformance. Boa is actively developed and used as a platform for exploring modern JavaScript engine design in a memory-safe systems programming language.\n\nIn 2026 Boa's work has been used in browsers such as Google Chrome and Node.js to implement Temporal, you can read more about this in https://boajs.dev/blog/2025/09/24/temporal-release. Boa has also been used as an implementation to help drive standards within TC39 (the standards committee behind JavaScript).",
+    "tech_tags": [
+      "javascript",
+      "rust"
+    ],
+    "topic_tags": [
+      "compilers",
+      "web",
+      "performance",
+      "interpreters"
+    ],
+    "contact_links": [
+      {
+        "name": "chat",
+        "value": "https://matrix.to/#/#boa:matrix.org"
+      },
+      {
+        "name": "twitter",
+        "value": "https://bsky.app/profile/boajs.dev"
+      },
+      {
+        "name": "blog",
+        "value": "https://boajs.dev"
+      }
+    ],
+    "source_code": "https://github.com/boa-dev/boa",
+    "ideas_link": "https://boajs.dev/roadmap",
+    "direct_comm_methods": [
+      {
+        "name": "chat",
+        "value": "https://matrix.to/#/#boa:matrix.org"
+      }
+    ],
+    "social_comm_methods": [
+      {
+        "name": "twitter",
+        "value": "https://bsky.app/profile/boajs.dev"
+      },
+      {
+        "name": "blog",
+        "value": "https://boajs.dev"
+      }
+    ]
+  },
+  {
+    "name": "EROFS filesystem",
+    "slug": "erofs-filesystem",
+    "logo_url": "https://summerofcode.withgoogle.com/media/org/erofs-filesystem/qrkpvwkzjqmwoyau-360.png",
+    "website_url": "https://erofs.docs.kernel.org",
+    "tagline": "Modern image-based kernel filesystem for everyone",
+    "license": "GPL-2.0",
+    "categories": [
+      "Operating systems",
+      "Infrastructure and cloud"
+    ],
+    "contributor_guidance_url": null,
+    "description": "EROFS [1] is a modern, high-performance block-based immutable Linux filesystem with highly-optimized on-disk format and runtime implementation. Since it's landed upstream, it has been widely deployed to billions of devices, and addresses various target scenarios. Nowadays, almost all Linux mainstream distributions support EROFS.\n\nEROFS has become a recommended filesystem [2] for Android system partitions and has already been adopted by the majority of Android vendors. It has also become popular in the Linux container world. For example, Composefs [3] uses the EROFS format for its metadata tree. Containerd 2.1 [4] also officially includes a built-in EROFS support to boost container launch performance. gVisor now supports EROFS as well [5].\n\n[1] https://erofs.docs.kernel.org\n[2] https://source.android.com/docs/core/architecture/kernel/erofs\n[3] https://github.com/containers/composefs\n[4] https://github.com/containerd/containerd/releases/tag/v2.1.0\n[5] https://github.com/google/gvisor/pull/9486",
+    "tech_tags": [
+      "c",
+      "android",
+      "linux kernel",
+      "Containerd",
+      "gVisor"
+    ],
+    "topic_tags": [
+      "operating system",
+      "containers",
+      "android",
+      "filesystems",
+      "agent sandbox"
+    ],
+    "contact_links": [
+      {
+        "name": "email",
+        "value": "linux-erofs@lists.ozlabs.org"
+      },
+      {
+        "name": "mailingList",
+        "value": "https://lists.ozlabs.org/listinfo/linux-erofs"
+      },
+      {
+        "name": "blog",
+        "value": "https://erofs.docs.kernel.org"
+      }
+    ],
+    "source_code": "https://git.kernel.org/pub/scm/linux/kernel/git/xiang/erofs-utils.git",
+    "ideas_link": "https://erofs.docs.kernel.org/en/latest/roadmap.html",
+    "direct_comm_methods": [
+      {
+        "name": "email",
+        "value": "linux-erofs@lists.ozlabs.org"
+      },
+      {
+        "name": "mailingList",
+        "value": "https://lists.ozlabs.org/listinfo/linux-erofs"
+      }
+    ],
+    "social_comm_methods": [
+      {
+        "name": "blog",
+        "value": "https://erofs.docs.kernel.org"
+      }
+    ]
+  },
+  {
+    "name": "Gambit: The package for computation in game theory",
+    "slug": "gambit-the-package-for-computation-in-game-theory",
+    "logo_url": "https://summerofcode.withgoogle.com/media/org/gambit-the-package-for-computation-in-game-theory/09u5sma4pizmwbqt-360.png",
+    "website_url": "https://www.gambit-project.org",
+    "tagline": "The package for computation in game theory",
+    "license": "GPL-2.0",
+    "categories": [
+      "Science and medicine",
+      "Artificial Intelligence"
+    ],
+    "contributor_guidance_url": "https://www.gambit-project.org/gsoc_2026/",
+    "description": "Gambit is a set of software tools for doing computation on finite, noncooperative games in extensive or strategy form and a set of file formats for storing and communicating games to external tools.\n\nThe Gambit Project was founded in the mid-1980s at the California Institute of Technology and to this day is actively developed by a community of contributors, with core development led by The Alan Turing Institute as part of its project: Automated analysis of strategic interactions.",
+    "tech_tags": [
+      "python",
+      "c++",
+      "wxwidgets",
+      "visualization"
+    ],
+    "topic_tags": [
+      "algorithms",
+      "game theory",
+      "mathematical optimizaton"
+    ],
+    "contact_links": [
+      {
+        "name": "email",
+        "value": "ted.turocy@gmail.com"
+      },
+      {
+        "name": "email",
+        "value": "rahul.savani@gmail.com"
+      },
+      {
+        "name": "email",
+        "value": "echalstrey@turing.ac.uk"
+      },
+      {
+        "name": "twitter",
+        "value": "https://x.com/thegambitproj"
+      }
+    ],
+    "source_code": "https://github.com/gambitproject/gambit/",
+    "ideas_link": "https://www.gambit-project.org/gsoc_2026/",
+    "direct_comm_methods": [
+      {
+        "name": "email",
+        "value": "ted.turocy@gmail.com"
+      },
+      {
+        "name": "email",
+        "value": "rahul.savani@gmail.com"
+      },
+      {
+        "name": "email",
+        "value": "echalstrey@turing.ac.uk"
+      }
+    ],
+    "social_comm_methods": [
+      {
+        "name": "twitter",
+        "value": "https://x.com/thegambitproj"
+      }
+    ]
+  },
+  {
+    "name": "Gemini CLI",
+    "slug": "gemini-cli",
+    "logo_url": "https://summerofcode.withgoogle.com/media/org/gemini-cli/mhi8cx7tyjt91i6n-360.png",
+    "website_url": "https://geminicli.com",
+    "tagline": "Gemini CLI brings the power of Gemini directly into your terminal",
+    "license": "Apache-2.0",
+    "categories": [
+      "Development tools",
+      "Artificial Intelligence"
+    ],
+    "contributor_guidance_url": "https://github.com/google-gemini/gemini-cli/blob/main/CONTRIBUTING.md",
+    "description": "The Gemini CLI team maintains the Gemini CLI OSS project in order to deliver a high-quality, state-of-the-art agent to a large, global user base. Maintainers manage a set of public and internal (Google) backlog goals, open source community contributions, and build/release infrastructure.",
+    "tech_tags": [
+      "typescript",
+      "GenAI",
+      "MCP",
+      "Software Agent",
+      "A2A"
+    ],
+    "topic_tags": [
+      "developer tools",
+      "GenAI"
+    ],
+    "contact_links": [
+      {
+        "name": "email",
+        "value": "gemini-cli-soc-2026@google.com"
+      },
+      {
+        "name": "twitter",
+        "value": "https://x.com/geminicli"
+      }
+    ],
+    "source_code": "https://github.com/google-gemini/gemini-cli/",
+    "ideas_link": "https://docs.google.com/document/d/1iaMZliqwUn-ACyZAbgzdXmDiQZ7l5gp8UQIIY2BnPO8/edit?usp=sharing",
+    "direct_comm_methods": [
+      {
+        "name": "email",
+        "value": "gemini-cli-soc-2026@google.com"
+      }
+    ],
+    "social_comm_methods": [
+      {
+        "name": "twitter",
+        "value": "https://x.com/geminicli"
+      }
+    ]
+  },
+  {
+    "name": "German Center for Open Source AI",
+    "slug": "german-center-for-open-source-ai",
+    "logo_url": "https://summerofcode.withgoogle.com/media/org/german-center-for-open-source-ai/mir4i7v7wopcc7wn-360.png",
+    "website_url": "https://gcos.ai/",
+    "tagline": "Democratically governed AI for society",
+    "license": "BSD-3-Clause",
+    "categories": [
+      "Data",
+      "Artificial Intelligence"
+    ],
+    "contributor_guidance_url": "https://github.com/gc-os-ai/mentoring-projects/blob/main/README.md#contributor-guides",
+    "description": "German Center for Open Source AI (GC.OS) builds open source AI software and a sovereign tech stack that is democratically run by its users. For a list of our supported projects, please visit: https://gcos.ai/projects.",
+    "tech_tags": [
+      "python",
+      "pytorch",
+      "scikit-learn"
+    ],
+    "topic_tags": [
+      "machine learning",
+      "time-series",
+      "Causal Inference"
+    ],
+    "contact_links": [
+      {
+        "name": "chat",
+        "value": "https://discord.gg/7uKdHfdcJG"
+      },
+      {
+        "name": "blog",
+        "value": "https://www.linkedin.com/company/german-center-for-open-source-ai"
+      }
+    ],
+    "source_code": "https://github.com/gc-os-ai/.github/blob/main/profile/README.md",
+    "ideas_link": "https://github.com/gc-os-ai/mentoring-projects/blob/main/2026/ideas_list.md",
+    "direct_comm_methods": [
+      {
+        "name": "chat",
+        "value": "https://discord.gg/7uKdHfdcJG"
+      }
+    ],
+    "social_comm_methods": [
+      {
+        "name": "blog",
+        "value": "https://www.linkedin.com/company/german-center-for-open-source-ai"
+      }
+    ]
+  },
+  {
+    "name": "GNU Mailman",
+    "slug": "gnu-mailman",
+    "logo_url": "https://summerofcode.withgoogle.com/media/org/gnu-mailman/cg5sxkouo8rjtjw2-360.png",
+    "website_url": "https://www.list.org",
+    "tagline": "GNU Mailman manages your mailing lists.",
+    "license": "GPL-3.0",
+    "categories": [
+      "Social and communication"
+    ],
+    "contributor_guidance_url": "https://wiki.list.org/DEV/Google%20Summer%20of%20Code%202022",
+    "description": "The Mailman project develops the GNU Mailman mailing list manager. Our goals are RFC conformance and powerful convenient tools for subscribers, moderators, list owners, domain administrators, and site adminstrators of mailing lists.",
+    "tech_tags": [
+      "python",
+      "django",
+      "rest",
+      "sqlalchemy",
+      "zope"
+    ],
+    "topic_tags": [
+      "email",
+      "archives",
+      "list management"
+    ],
+    "contact_links": [
+      {
+        "name": "mailingList",
+        "value": "mailman-developers@python.org"
+      },
+      {
+        "name": "mailingList",
+        "value": "mailman-users@mailman3.org"
+      },
+      {
+        "name": "chat",
+        "value": "https://web.libera.chat/#mailman"
+      }
+    ],
+    "source_code": "https://gitlab.com/mailman",
+    "ideas_link": "https://wiki.list.org/DEV/Google%20Summer%20of%20Code%202026",
+    "direct_comm_methods": [
+      {
+        "name": "mailingList",
+        "value": "mailman-developers@python.org"
+      },
+      {
+        "name": "mailingList",
+        "value": "mailman-users@mailman3.org"
+      },
+      {
+        "name": "chat",
+        "value": "https://web.libera.chat/#mailman"
+      }
+    ],
+    "social_comm_methods": []
+  },
+  {
+    "name": "GNU Project",
+    "slug": "gnu-project-av",
+    "logo_url": "https://summerofcode.withgoogle.com/media/org/gnu-project-av/aht1h1aunalkojoq-360.png",
+    "website_url": "https://www.gnu.org",
+    "tagline": "Development of the GNU Operating System",
+    "license": "GPL-3.0",
+    "categories": [
+      "Operating systems",
+      "Development tools"
+    ],
+    "contributor_guidance_url": "https://www.gnu.org/software/soc-projects/guidelines.html",
+    "description": "GNU is an operating system consisting entirely of free software, meaning it respects users’ freedom. The GNU operating system consists of GNU packages, which are programs released by the GNU Project, as well as free software released by third parties. The development of GNU made it possible to use a computer without relying on software that restricts or undermines user freedom. The GNU Project is the collective organization of maintainers and developers, webmasters, translators, and other contributors who develop and maintain more than 400 programs that together form the GNU operating system.",
+    "tech_tags": [
+      "c",
+      "c++",
+      "gcc",
+      "autotools",
+      "GNU"
+    ],
+    "topic_tags": [
+      "compilers",
+      "operating system",
+      "toolchain",
+      "command line",
+      "OS"
+    ],
+    "contact_links": [
+      {
+        "name": "email",
+        "value": "summer-of-code@gnu.org"
+      },
+      {
+        "name": "blog",
+        "value": "https://planet.gnu.org"
+      }
+    ],
+    "source_code": "https://savannah.gnu.org",
+    "ideas_link": "https://www.gnu.org/s/soc-projects/ideas.html",
+    "direct_comm_methods": [
+      {
+        "name": "email",
+        "value": "summer-of-code@gnu.org"
+      }
+    ],
+    "social_comm_methods": [
+      {
+        "name": "blog",
+        "value": "https://planet.gnu.org"
+      }
+    ]
+  },
+  {
+    "name": "Konflux",
+    "slug": "konflux",
+    "logo_url": "https://summerofcode.withgoogle.com/media/org/konflux/7znpk8j83biro6rn.png",
+    "website_url": "https://konflux-ci.dev/",
+    "tagline": "Secure software pipelines, the K8s way",
+    "license": "Apache-2.0",
+    "categories": [
+      "Infrastructure and cloud",
+      "Development tools"
+    ],
+    "contributor_guidance_url": null,
+    "description": "Konflux is an open source, opinionated Kubernetes-native software factory built on Tekton, focused on software supply chain security. It provides an end-to-end pipeline: hermetic builds from source, cryptographic signing, provenance attestation, vulnerability scanning, policy verification, and release automation. Konflux integrates with the broader supply chain security ecosystem (Sigstore, SLSA, Conforma) and is built by a welcoming community that values collaboration, transparency, and mentorship.\nContributors work with cutting-edge cloud-native technologies and help shape how we solve one of the most critical challenges in modern software delivery.",
+    "tech_tags": [
+      "python",
+      "go",
+      "docker",
+      "kubernetes",
+      "tekton"
+    ],
+    "topic_tags": [
+      "cloud-native",
+      "CI/CD",
+      "Tekton",
+      "SLSA",
+      "supplychain"
+    ],
+    "contact_links": [
+      {
+        "name": "mailingList",
+        "value": "https://groups.google.com/g/konflux"
+      },
+      {
+        "name": "chat",
+        "value": "https://join.slack.com/t/konflux-ci/shared_invite/zt-3g36o0a4x-Dmsy25XEGuBV79S7kd04CA"
+      },
+      {
+        "name": "blog",
+        "value": "https://join.slack.com/t/konflux-ci/shared_invite/zt-3g36o0a4x-Dmsy25XEGuBV79S7kd04CA"
+      }
+    ],
+    "source_code": "https://github.com/konflux-ci",
+    "ideas_link": "https://github.com/konflux-ci/community/wiki/Google-Summer-of-Code-&-Outreachy-Project-Ideas-%E2%80%90-2026",
+    "direct_comm_methods": [
+      {
+        "name": "mailingList",
+        "value": "https://groups.google.com/g/konflux"
+      },
+      {
+        "name": "chat",
+        "value": "https://join.slack.com/t/konflux-ci/shared_invite/zt-3g36o0a4x-Dmsy25XEGuBV79S7kd04CA"
+      }
+    ],
+    "social_comm_methods": [
+      {
+        "name": "blog",
+        "value": "https://join.slack.com/t/konflux-ci/shared_invite/zt-3g36o0a4x-Dmsy25XEGuBV79S7kd04CA"
+      }
+    ]
+  },
+  {
+    "name": "Learning Unlimited",
+    "slug": "learning-unlimited",
+    "logo_url": "https://summerofcode.withgoogle.com/media/org/learning-unlimited/prqi7cnmji8guahm-360.png",
+    "website_url": "https://www.learningu.org/",
+    "tagline": "Building excitement for teaching and learning",
+    "license": "MIT",
+    "categories": [
+      "End user applications",
+      "Web"
+    ],
+    "contributor_guidance_url": "https://docs.google.com/document/d/e/2PACX-1vSQrzex-1PlqTGwOiFmiFnGlm1_3ajsf-Wo2z-9hUzJybZQOBD4EraIH_iW7Qn87TPB2SR5O_JX1T6C/pub",
+    "description": "Learning Unlimited's mission is to create educational opportunities for high school and middle school students, and to provide leadership and teaching opportunities for college students. Learning Unlimited strives to engage students of all ages in an educational setting to share and discover their passions. To accomplish this, Learning Unlimited links local universities with their communities. Our open source work revolves around building and maintaining website infrastructure for these chapters to use.",
+    "tech_tags": [
+      "python",
+      "javascript",
+      "django",
+      "html",
+      "css"
+    ],
+    "topic_tags": [
+      "education",
+      "web",
+      "full stack",
+      "Outreach"
+    ],
+    "contact_links": [
+      {
+        "name": "email",
+        "value": "gsoc-mentors-2026@learningu.org"
+      },
+      {
+        "name": "mailingList",
+        "value": "https://github.com/learning-unlimited/ESP-Website/discussions"
+      },
+      {
+        "name": "facebook",
+        "value": "https://www.facebook.com/SplashLearningUnlimited"
+      }
+    ],
+    "source_code": "https://github.com/learning-unlimited",
+    "ideas_link": "https://docs.google.com/document/d/e/2PACX-1vQHE4OyXDdhDPkP2X7OWdSjauW_rQi1Fhr3RwEgTrSjDbrHO3nePDCdJkCheeocMrRTdqbHqnmb9WcG/pub",
+    "direct_comm_methods": [
+      {
+        "name": "email",
+        "value": "gsoc-mentors-2026@learningu.org"
+      },
+      {
+        "name": "mailingList",
+        "value": "https://github.com/learning-unlimited/ESP-Website/discussions"
+      }
+    ],
+    "social_comm_methods": [
+      {
+        "name": "facebook",
+        "value": "https://www.facebook.com/SplashLearningUnlimited"
+      }
+    ]
+  },
+  {
+    "name": "MalariaGEN",
+    "slug": "malariagen",
+    "logo_url": "https://summerofcode.withgoogle.com/media/org/malariagen/8dgzolp37fdiwm5h-360.png",
+    "website_url": "https://www.malariagen.net/",
+    "tagline": "The Malaria Genomic Epidemiology Network",
+    "license": "MIT",
+    "categories": [
+      "Science and medicine",
+      "Data"
+    ],
+    "contributor_guidance_url": "https://docs.google.com/document/d/178LEZEsC0xbknHDId83k5XzIDRtnyVw243Ta0fhlvPM/edit?usp=sharing",
+    "description": "MalariaGEN is a global network of global partners who share and integrate data relevant to inform malaria surveillance, our mission is to generate insights and tools that bridge the gaps for analysts in malaria endemic settings to use their data meaningfully to inform public health efforts. We build and optimise data resources and analytical tools to run directly in the cloud. Our flagship project is the Vector Observatory, which includes whole-genome sequence data for over 30,000 mosquitoes, integrating data from 70 partners across the globe from over 17 different mosquito species -- this is the largest resource on genetic variation data for any multicellular organism (other than humans!). Our goal is to enable analysts, scientists, students and public health practitioners to access these data without the need for any dedicated compute infrastructure, by optimising our resources to run within free compute environments (a big shout to Google Colab!) and by developing training resources that support partners to get confident with using cloud-native data and resources for their analysis.",
+    "tech_tags": [
+      "python",
+      "GCS"
+    ],
+    "topic_tags": [
+      "machine learning",
+      "genomics",
+      "big data",
+      "cloud",
+      "analytics"
+    ],
+    "contact_links": [
+      {
+        "name": "mailingList",
+        "value": "support@malariagen.net"
+      },
+      {
+        "name": "blog",
+        "value": "https://github.com/malariagen/malariagen-data-python/discussions"
+      }
+    ],
+    "source_code": "https://github.com/malariagen/",
+    "ideas_link": "https://docs.google.com/document/d/178LEZEsC0xbknHDId83k5XzIDRtnyVw243Ta0fhlvPM/edit?tab=t.0",
+    "direct_comm_methods": [
+      {
+        "name": "mailingList",
+        "value": "support@malariagen.net"
+      }
+    ],
+    "social_comm_methods": [
+      {
+        "name": "blog",
+        "value": "https://github.com/malariagen/malariagen-data-python/discussions"
+      }
+    ]
+  },
+  {
+    "name": "Measurement Lab",
+    "slug": "measurement-lab",
+    "logo_url": "https://summerofcode.withgoogle.com/media/org/measurement-lab/0sttrnvo03uejp1z.png",
+    "website_url": "https://www.measurementlab.net/",
+    "tagline": "Providing Internet performance data since 2009.",
+    "license": "Apache-2.0",
+    "categories": [
+      "Data",
+      "Web"
+    ],
+    "contributor_guidance_url": "https://github.com/m-lab/gsoc",
+    "description": "Founded in 2009, Measurement Lab (M-Lab) is an open platform for studying Internet performance and neutrality over time. We provide public, transparent data to empower researchers, policymakers, and open Internet advocates to make informed decisions about Internet infrastructure and policies.",
+    "tech_tags": [
+      "python",
+      "javascript",
+      "html",
+      "sql",
+      "css"
+    ],
+    "topic_tags": [
+      "data analysis",
+      "speed test",
+      "Internet measurements",
+      "Internet quality"
+    ],
+    "contact_links": [
+      {
+        "name": "email",
+        "value": "pavlos@measurementlab.net"
+      },
+      {
+        "name": "email",
+        "value": "mnewcomb@measurementlab.net"
+      },
+      {
+        "name": "twitter",
+        "value": "https://x.com/MeasurementLab"
+      },
+      {
+        "name": "blog",
+        "value": "https://www.measurementlab.net/blog/"
+      }
+    ],
+    "source_code": "https://github.com/m-lab/",
+    "ideas_link": "https://github.com/m-lab/gsoc",
+    "direct_comm_methods": [
+      {
+        "name": "email",
+        "value": "pavlos@measurementlab.net"
+      },
+      {
+        "name": "email",
+        "value": "mnewcomb@measurementlab.net"
+      }
+    ],
+    "social_comm_methods": [
+      {
+        "name": "twitter",
+        "value": "https://x.com/MeasurementLab"
+      },
+      {
+        "name": "blog",
+        "value": "https://www.measurementlab.net/blog/"
+      }
+    ]
+  },
+  {
+    "name": "Metaflow",
+    "slug": "metaflow",
+    "logo_url": "https://summerofcode.withgoogle.com/media/org/metaflow/lxpx64opqtnss7yx-360.png",
+    "website_url": "https://metaflow.org/",
+    "tagline": "A human centric machine learning framework",
+    "license": "Apache-2.0",
+    "categories": [
+      "Infrastructure and cloud",
+      "Artificial Intelligence"
+    ],
+    "contributor_guidance_url": "https://github.com/Netflix/metaflow/blob/master/GSOC_CONTRIBUTOR_GUIDANCE.md",
+    "description": "Metaflow is a human-friendly Python library that makes it straightforward to develop, deploy, and operate various kinds of data-intensive applications, in particular those involving data science, ML, and AI. Metaflow was originally developed at Netflix to boost the productivity of data scientists who work on a wide variety of projects, from classical statistics to state-of-the-art deep learning. \n\nMetaflow provides a unified API across the entire infrastructure stack required to execute data science projects from prototype to production.",
+    "tech_tags": [
+      "python",
+      "javascript",
+      "kubernetes"
+    ],
+    "topic_tags": [
+      "machine learning",
+      "data science",
+      "ML Ops",
+      "Orchestrator"
+    ],
+    "contact_links": [
+      {
+        "name": "email",
+        "value": "help@metaflow.org"
+      },
+      {
+        "name": "mailingList",
+        "value": "http://chat.metaflow.org/"
+      },
+      {
+        "name": "twitter",
+        "value": "https://x.com/MetaflowOSS"
+      }
+    ],
+    "source_code": "https://github.com/Netflix/metaflow",
+    "ideas_link": "https://github.com/Netflix/metaflow/blob/master/GSOC_2026_PROPOSALS.md",
+    "direct_comm_methods": [
+      {
+        "name": "email",
+        "value": "help@metaflow.org"
+      },
+      {
+        "name": "mailingList",
+        "value": "http://chat.metaflow.org/"
+      }
+    ],
+    "social_comm_methods": [
+      {
+        "name": "twitter",
+        "value": "https://x.com/MetaflowOSS"
+      }
+    ]
+  },
+  {
+    "name": "MLLAM",
+    "slug": "mllam",
+    "logo_url": "https://summerofcode.withgoogle.com/media/org/mllam/ltm3mtlosvdcrw0c.png",
+    "website_url": "https://github.com/mllam",
+    "tagline": "Research software for AI weather forecasting",
+    "license": "MIT",
+    "categories": [
+      "Science and medicine",
+      "Artificial Intelligence"
+    ],
+    "contributor_guidance_url": "https://github.com/mllam/neural-lam/wiki/GSoC-ideas",
+    "description": "MLLAM is a collaborative community dedicated to advancing machine learning applications in weather forecasting, specifically for Limited Area Modeling (LAM). The organization hosts several open-source key repositories, including neural-lam, which focuses on neural weather prediction using graph-based models. Members are from various research institutions and national weather services committed to improve weather forecasting at regional, high-resolution scale.",
+    "tech_tags": [
+      "python",
+      "numpy",
+      "pytorch",
+      "xarray",
+      "Zarr"
+    ],
+    "topic_tags": [
+      "machine learning",
+      "ai",
+      "deep learning",
+      "earth science",
+      "Weather Forecasting"
+    ],
+    "contact_links": [
+      {
+        "name": "chat",
+        "value": "https://kutt.it/mllam"
+      },
+      {
+        "name": "blog",
+        "value": "https://github.com/mllam/neural-lam/wiki"
+      }
+    ],
+    "source_code": "https://github.com/mllam/neural-lam",
+    "ideas_link": "https://github.com/mllam/neural-lam/wiki/GSoC-ideas",
+    "direct_comm_methods": [
+      {
+        "name": "chat",
+        "value": "https://kutt.it/mllam"
+      }
+    ],
+    "social_comm_methods": [
+      {
+        "name": "blog",
+        "value": "https://github.com/mllam/neural-lam/wiki"
+      }
+    ]
+  },
+  {
+    "name": "MoFA Org",
+    "slug": "mofa-org",
+    "logo_url": "https://summerofcode.withgoogle.com/media/org/mofa-org/fa7e34trht3ou7yo-360.png",
+    "website_url": "https://mofa.ai",
+    "tagline": "Empower extraordinary with Composition AI",
+    "license": "Apache-2.0",
+    "categories": [
+      "Development tools",
+      "Artificial Intelligence"
+    ],
+    "contributor_guidance_url": "https://github.com/mofa-org/GSoC/blob/main/README.md",
+    "description": "mofa-org is an open-source organization that builds and maintains the MoFA ecosystem — a modular AI agent framework that makes it easy to build, compose, and run complex AI applications & a collection of open-source tools and frameworks designed to:\n\n- Allow developers to compose AI agents like building blocks\n- Enable complex AI systems without heavy boilerplate or bespoke pipelines\n- Provide visual tooling (like MoFA Stage) for developer productivity",
+    "tech_tags": [
+      "python",
+      "rust"
+    ],
+    "topic_tags": [
+      "development framework",
+      "AI Agent",
+      "Compostion AI"
+    ],
+    "contact_links": [
+      {
+        "name": "email",
+        "value": "dev@mofa.ai"
+      },
+      {
+        "name": "chat",
+        "value": "https://discord.gg/hKJZzDMMm9"
+      },
+      {
+        "name": "blog",
+        "value": "https://mofa.ai/blog/"
+      },
+      {
+        "name": "twitter",
+        "value": "https://x.com/mofa_ai"
+      }
+    ],
+    "source_code": "https://github.com/mofa-org",
+    "ideas_link": "https://github.com/mofa-org/GSoC/blob/main/ideas-list.md",
+    "direct_comm_methods": [
+      {
+        "name": "email",
+        "value": "dev@mofa.ai"
+      },
+      {
+        "name": "chat",
+        "value": "https://discord.gg/hKJZzDMMm9"
+      }
+    ],
+    "social_comm_methods": [
+      {
+        "name": "blog",
+        "value": "https://mofa.ai/blog/"
+      },
+      {
+        "name": "twitter",
+        "value": "https://x.com/mofa_ai"
+      }
+    ]
+  },
+  {
+    "name": "MoganLab",
+    "slug": "moganlab",
+    "logo_url": "https://summerofcode.withgoogle.com/media/org/moganlab/tuz5k2kmoivlkods-360.png",
+    "website_url": "https://mogan.app/en/",
+    "tagline": "Make acedemic writing as nature as breathing",
+    "license": "GPL-3.0",
+    "categories": [
+      "Programming languages",
+      "Development tools",
+      "Artificial Intelligence"
+    ],
+    "contributor_guidance_url": "https://github.com/XmacsLabs/mogan/blob/main/devel/Develop_on_Linux.md",
+    "description": "Moganlab develops Mogan STEM, a professional scientific writing platform specifically designed for mathematics, physics, statistics, and computer science, targeting complex formula-based documents. It is deeply optimized from GNU TeXmacs, with emphasis on performance and user experience. With Mogan STEM, you can create documents 100 times faster than LaTeX",
+    "tech_tags": [
+      "c++",
+      "qt",
+      "scheme"
+    ],
+    "topic_tags": [
+      "editor",
+      "latex",
+      "AI for math"
+    ],
+    "contact_links": [
+      {
+        "name": "mailingList",
+        "value": "yansong@liii.pro"
+      },
+      {
+        "name": "blog",
+        "value": "https://www.reddit.com/r/TeXmacs/"
+      }
+    ],
+    "source_code": "https://github.com/XmacsLabs/mogan",
+    "ideas_link": "https://github.com/MoganLab/GSoC-2026-MoganLab/blob/main/idelas/main.md",
+    "direct_comm_methods": [
+      {
+        "name": "mailingList",
+        "value": "yansong@liii.pro"
+      }
+    ],
+    "social_comm_methods": [
+      {
+        "name": "blog",
+        "value": "https://www.reddit.com/r/TeXmacs/"
+      }
+    ]
+  },
+  {
+    "name": "OpenMS Inc",
+    "slug": "openms-inc",
+    "logo_url": "https://summerofcode.withgoogle.com/media/org/openms-inc/qhamer7p2auro5cs-360.png",
+    "website_url": "https://OpenMS.org",
+    "tagline": "Advancing Algorithms & AI for Biomedical Insights",
+    "license": "BSD-3-Clause",
+    "categories": [
+      "Science and medicine",
+      "Data"
+    ],
+    "contributor_guidance_url": "https://openms.de/news/gsoc2026/",
+    "description": "OpenMS is an open-source C++ software library for mass spectrometry data management and analysis with python wrappers. OpenMS houses an expansive modular toolset and ready-to-use scientific workflows in Galaxy, KNIME and nextflow.",
+    "tech_tags": [
+      "python",
+      "cython",
+      "c++",
+      "pytorch",
+      "Streamlit"
+    ],
+    "topic_tags": [
+      "open science",
+      "deep learning",
+      "algorithms",
+      "mass spectrometry",
+      "webdev"
+    ],
+    "contact_links": [
+      {
+        "name": "chat",
+        "value": "https://discord.com/invite/4TAGhqJ7s5"
+      },
+      {
+        "name": "blog",
+        "value": "https://openms.de/news/"
+      }
+    ],
+    "source_code": "https://github.com/OpenMS/OpenMS",
+    "ideas_link": "https://openms.de/news/gsoc2026/",
+    "direct_comm_methods": [
+      {
+        "name": "chat",
+        "value": "https://discord.com/invite/4TAGhqJ7s5"
+      }
+    ],
+    "social_comm_methods": [
+      {
+        "name": "blog",
+        "value": "https://openms.de/news/"
+      }
+    ]
+  },
+  {
+    "name": "preCICE",
+    "slug": "precice",
+    "logo_url": "https://summerofcode.withgoogle.com/media/org/precice/19ymcw80uxn8g9ia-360.png",
+    "website_url": "https://precice.org/",
+    "tagline": "The coupling library for multi-physics simulations",
+    "license": "LGPL-3.0",
+    "categories": [
+      "Science and medicine",
+      "Other"
+    ],
+    "contributor_guidance_url": "https://precice.org/community-contribute-open-projects.html#google-summer-of-code",
+    "description": "preCICE is an open-source coupling library and ecosystem for general partitioned multi-physics and multi-scale simulations, including surface and volume coupling.\n\nPartitioned means that preCICE couples existing programs/solvers capable of simulating a subpart of the complete physics involved in a simulation. This allows for the high flexibility that is needed to keep a decent time-to-solution for complex coupled problems.\n\nThe software offers convenient methods for transient equation coupling, communication, time interpolation, and data mapping.",
+    "tech_tags": [
+      "c",
+      "python",
+      "shell",
+      "c++"
+    ],
+    "topic_tags": [
+      "scientific computing",
+      "simulation"
+    ],
+    "contact_links": [
+      {
+        "name": "mailingList",
+        "value": "https://precice.discourse.group/c/jobs/gsoc/15"
+      },
+      {
+        "name": "chat",
+        "value": "https://precice.org/community-channels.html"
+      },
+      {
+        "name": "blog",
+        "value": "https://precice.discourse.group/c/news"
+      }
+    ],
+    "source_code": "https://github.com/precice/",
+    "ideas_link": "https://precice.org/community-contribute-open-projects.html",
+    "direct_comm_methods": [
+      {
+        "name": "mailingList",
+        "value": "https://precice.discourse.group/c/jobs/gsoc/15"
+      },
+      {
+        "name": "chat",
+        "value": "https://precice.org/community-channels.html"
+      }
+    ],
+    "social_comm_methods": [
+      {
+        "name": "blog",
+        "value": "https://precice.discourse.group/c/news"
+      }
+    ]
+  },
+  {
+    "name": "Qubes OS",
+    "slug": "qubes-os-f3",
+    "logo_url": "https://summerofcode.withgoogle.com/media/org/qubes-os-f3/4hohuknku00cpaja-360.png",
+    "website_url": "https://qubes-os.org",
+    "tagline": "A reasonably secure operating system",
+    "license": "GPL-2.0",
+    "categories": [
+      "Operating systems",
+      "Security"
+    ],
+    "contributor_guidance_url": "https://doc.qubes-os.org/en/latest/developer/general/gsoc.html#information-for-students",
+    "description": "Qubes OS is a security- and privacy-focused free-and-open-source operating system that provides a safer platform for communications, information management, and general computing.",
+    "tech_tags": [
+      "c",
+      "python",
+      "xen"
+    ],
+    "topic_tags": [
+      "security",
+      "privacy",
+      "OS"
+    ],
+    "contact_links": [
+      {
+        "name": "mailingList",
+        "value": "https://forum.qubes-o.org"
+      },
+      {
+        "name": "mailingList",
+        "value": "https://doc.qubes-os.org/en/latest/introduction/support.html#qubes-devel"
+      },
+      {
+        "name": "chat",
+        "value": "https://internal-team.matrix.instance"
+      },
+      {
+        "name": "blog",
+        "value": "https://www.qubes-os.org/news/"
+      },
+      {
+        "name": "twitter",
+        "value": "https://mastodon.social/@QubesOS"
+      }
+    ],
+    "source_code": "https://github.com/QubesOS/",
+    "ideas_link": "https://doc.qubes-os.org/en/latest/developer/general/gsoc.html#project-ideas",
+    "direct_comm_methods": [
+      {
+        "name": "mailingList",
+        "value": "https://forum.qubes-o.org"
+      },
+      {
+        "name": "mailingList",
+        "value": "https://doc.qubes-os.org/en/latest/introduction/support.html#qubes-devel"
+      },
+      {
+        "name": "chat",
+        "value": "https://internal-team.matrix.instance"
+      }
+    ],
+    "social_comm_methods": [
+      {
+        "name": "blog",
+        "value": "https://www.qubes-os.org/news/"
+      },
+      {
+        "name": "twitter",
+        "value": "https://mastodon.social/@QubesOS"
+      }
+    ]
+  },
+  {
+    "name": "The Libreswan Project",
+    "slug": "the-libreswan-project",
+    "logo_url": "https://summerofcode.withgoogle.com/media/org/the-libreswan-project/k7boxaxvirkfj1ti-360.png",
+    "website_url": "https://libreswan.org",
+    "tagline": "Encrypting the Internet with IKE / IPsec VPN",
+    "license": "GPL-3.0",
+    "categories": [
+      "Security",
+      "Infrastructure and cloud"
+    ],
+    "contributor_guidance_url": "https://github.com/libreswan/libreswan/wiki/GSoC-Contributor-Guidance",
+    "description": "Libreswan implements the IKE and IPsec standards for VPN.  These standards have been created and are still maintained at the Internet Engineering Task Force (IETF) in the IPsecME Working Group.  Libreswan is used as a remote access VPN as well as site-to-site and cloud encryption.",
+    "tech_tags": [
+      "c",
+      "kernel",
+      "nss",
+      "RFCs",
+      "libevent"
+    ],
+    "topic_tags": [
+      "vpn",
+      "ipsec",
+      "ikev2"
+    ],
+    "contact_links": [
+      {
+        "name": "chat",
+        "value": "https://web.libera.chat/#libreswan"
+      },
+      {
+        "name": "email",
+        "value": "gsoc@libreswan.org"
+      },
+      {
+        "name": "mailingList",
+        "value": "swan@lists.libreswan.org"
+      },
+      {
+        "name": "blog",
+        "value": "https://github.com/libreswan"
+      }
+    ],
+    "source_code": "https://github.com/libreswan/libreswan/",
+    "ideas_link": "https://github.com/libreswan/libreswan/wiki/GSoC-2026-Code-Project-Ideas",
+    "direct_comm_methods": [
+      {
+        "name": "chat",
+        "value": "https://web.libera.chat/#libreswan"
+      },
+      {
+        "name": "email",
+        "value": "gsoc@libreswan.org"
+      },
+      {
+        "name": "mailingList",
+        "value": "swan@lists.libreswan.org"
+      }
+    ],
+    "social_comm_methods": [
+      {
+        "name": "blog",
+        "value": "https://github.com/libreswan"
+      }
+    ]
+  },
+  {
+    "name": "The OpenROAD Initiative",
+    "slug": "the-openroad-initiative",
+    "logo_url": "https://summerofcode.withgoogle.com/media/org/the-openroad-initiative/wsxrroe08v4rdaga-360.png",
+    "website_url": "https://www.openroadinitiative.org",
+    "tagline": "Collaboratively building an OpenROAD ecosystem",
+    "license": "BSD-3-Clause",
+    "categories": [
+      "Infrastructure and cloud",
+      "Artificial Intelligence"
+    ],
+    "contributor_guidance_url": "https://openroad.readthedocs.io/en/latest/contrib/GettingInvolved.html",
+    "description": "ORI is a 501(c)(3) nonprofit that provides long-term stewardship, governance, and ecosystem leadership for the OpenROAD open-source EDA ecosystem.\nOur Vision: Making chip design open and accessible to all—building a collaborative ecosystem driven by transparency and shared innovation.\n\nOur Mission: To advance and sustain the open-source EDA ecosystem by fostering collaborative innovation across research, education, and industry—transforming ideas into silicon.",
+    "tech_tags": [
+      "python",
+      "verilog",
+      "c++",
+      "tcl",
+      "OpenRoad"
+    ],
+    "topic_tags": [
+      "ASIC design",
+      "OpenROAD chip design",
+      "Open EDA",
+      "Open-source Design",
+      "LLM chip design"
+    ],
+    "contact_links": [
+      {
+        "name": "mailingList",
+        "value": "https://github.com/The-OpenROAD-Project/OpenROAD/discussions"
+      },
+      {
+        "name": "twitter",
+        "value": "https://x.com/OpenROAD_EDA"
+      }
+    ],
+    "source_code": "https://github.com/The-OpenROAD-Project/OpenROAD",
+    "ideas_link": "https://docs.google.com/document/d/1X6xxUonxgEQ_iD5G5vFp2ZOH1vbkRSspEdYrpSf4khE/edit?usp=sharing",
+    "direct_comm_methods": [
+      {
+        "name": "mailingList",
+        "value": "https://github.com/The-OpenROAD-Project/OpenROAD/discussions"
+      }
+    ],
+    "social_comm_methods": [
+      {
+        "name": "twitter",
+        "value": "https://x.com/OpenROAD_EDA"
+      }
+    ]
+  },
+  {
+    "name": "Tiled",
+    "slug": "tiled",
+    "logo_url": "https://summerofcode.withgoogle.com/media/org/tiled/bat2ba3t9fujdzyn-360.png",
+    "website_url": "https://www.mapeditor.org",
+    "tagline": "A flexible level editor for everyone!",
+    "license": "GPL-2.0",
+    "categories": [
+      "End user applications"
+    ],
+    "contributor_guidance_url": "https://github.com/mapeditor/tiled/wiki/GSoC-2026#application-process",
+    "description": "Tiled is a 2D engine-agnostic level editor for games. Its primary feature is to edit different types of tile maps, but it also supports free image placement as well as powerful ways to annotate levels with extra information used by the game. Tiled focuses on general flexibility while trying to stay intuitive.",
+    "tech_tags": [
+      "c++",
+      "qt"
+    ],
+    "topic_tags": [
+      "games",
+      "Level Editor"
+    ],
+    "contact_links": [
+      {
+        "name": "mailingList",
+        "value": "https://discourse.mapeditor.org/t/google-summer-of-code-2026/7732"
+      },
+      {
+        "name": "chat",
+        "value": "https://discord.gg/39wbTv7"
+      },
+      {
+        "name": "email",
+        "value": "bjorn@mapeditor.org"
+      },
+      {
+        "name": "twitter",
+        "value": "https://x.com/TiledApp"
+      },
+      {
+        "name": "twitter",
+        "value": "https://floss.social/@tiled"
+      }
+    ],
+    "source_code": "https://github.com/mapeditor/tiled",
+    "ideas_link": "https://github.com/mapeditor/tiled/wiki/GSoC-2026#project-ideas",
+    "direct_comm_methods": [
+      {
+        "name": "mailingList",
+        "value": "https://discourse.mapeditor.org/t/google-summer-of-code-2026/7732"
+      },
+      {
+        "name": "chat",
+        "value": "https://discord.gg/39wbTv7"
+      },
+      {
+        "name": "email",
+        "value": "bjorn@mapeditor.org"
+      }
+    ],
+    "social_comm_methods": [
+      {
+        "name": "twitter",
+        "value": "https://x.com/TiledApp"
+      },
+      {
+        "name": "twitter",
+        "value": "https://floss.social/@tiled"
+      }
+    ]
+  },
+  {
+    "name": "United Nations Office of Information Communication Technology",
+    "slug": "united-nations-office-of-information-communication-technology",
+    "logo_url": "https://summerofcode.withgoogle.com/media/org/united-nations-office-of-information-communication-technology/bl0zv6y6mjmzuybz-360.png",
+    "website_url": "https://unite.un.org/en",
+    "tagline": "Sustainable future through innovative technology.",
+    "license": "Apache-2.0",
+    "categories": [
+      "End user applications",
+      "Other"
+    ],
+    "contributor_guidance_url": "https://opensource.unicc.org/un/unoict/mentorship-programme/google-summer-of-code/",
+    "description": "The Open Source Team at the United Nations, based within the UN Office of Information and Communications Technology (UNOICT), supports the development and adoption of open source technologies across the UN system and in collaboration with external partners. The team works to advance digital public goods that address global challenges such as climate resilience, sustainable food systems, and inclusive digital participation.\nThrough initiatives including “Reboot the Earth” and other open source collaborations, our team enables early-stage ideas to mature into scalable, production-ready solutions. Our work emphasizes open collaboration, responsible use of emerging technologies such as AI, focusing on deployment in real-world, resource-constrained environments. The Open Source Team also provides technical guidance, mentorship, and governance support to ensure projects not only align with UN values but also prioritize long-term sustainability.\nDisclaimer: All Summer of Code work is conducted independently. Contributors are not considered United Nations employees or official representatives.",
+    "tech_tags": [
+      "python",
+      "javascript",
+      "css"
+    ],
+    "topic_tags": [
+      "Technology",
+      "innovation"
+    ],
+    "contact_links": [
+      {
+        "name": "email",
+        "value": "mithusa.kajendran@un.org"
+      },
+      {
+        "name": "email",
+        "value": "mohsine@un.org"
+      },
+      {
+        "name": "email",
+        "value": "martinez-navarrete@un.org"
+      },
+      {
+        "name": "twitter",
+        "value": "https://x.com/UN_OICT"
+      }
+    ],
+    "source_code": "https://github.com/OSeMOSYS/MUIO/",
+    "ideas_link": "https://opensource.unicc.org/un/unoict/mentorship-programme/google-summer-of-code/-/blob/main/README.md",
+    "direct_comm_methods": [
+      {
+        "name": "email",
+        "value": "mithusa.kajendran@un.org"
+      },
+      {
+        "name": "email",
+        "value": "mohsine@un.org"
+      },
+      {
+        "name": "email",
+        "value": "martinez-navarrete@un.org"
+      }
+    ],
+    "social_comm_methods": [
+      {
+        "name": "twitter",
+        "value": "https://x.com/UN_OICT"
+      }
+    ]
+  }
+]
