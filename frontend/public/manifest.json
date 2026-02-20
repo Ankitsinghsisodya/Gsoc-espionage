@@ -1,7 +1,7 @@
 {
-  "name": "GSoC Espionage - GitHub PR Analytics & Contributor Insights",
-  "short_name": "GSoC Espionage",
-  "description": "Analyze GitHub Pull Requests with detailed contributor insights, merge rates, activity timelines, and export options. Track GSoC participants and open source contributions.",
+  "name": "gsoc.app — GSoC 2026 Organizations & PR Analytics",
+  "short_name": "gsoc.app",
+  "description": "Explore all 185 GSoC 2026 participating organizations including 22 new ones. Track GitHub PR activity, contributor stats, and code metrics for Google Summer of Code 2026 projects.",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#0f172a",
@@ -9,7 +9,7 @@
   "orientation": "portrait-primary",
   "scope": "/",
   "lang": "en",
-  "categories": ["developer tools", "productivity", "utilities"],
+  "categories": ["developer tools", "productivity", "education"],
   "icons": [
     {
       "src": "/favicon.png",
@@ -30,7 +30,16 @@
       "sizes": "1200x630",
       "type": "image/png",
       "form_factor": "wide",
-      "label": "GSoC Espionage Dashboard"
+      "label": "GSoC 2026 Organizations & PR Analytics Dashboard"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "GSoC 2026 Organizations",
+      "short_name": "Orgs",
+      "description": "Browse all 185 GSoC 2026 participating organizations",
+      "url": "/?view=orgs",
+      "icons": [{ "src": "/favicon.png", "sizes": "192x192" }]
     }
   ],
   "related_applications": [],

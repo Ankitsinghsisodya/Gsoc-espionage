@@ -1,11 +1,8 @@
-# robots.txt for PR Analyzer / GSoC Espionage
-# https://gsoc-espionage.vercel.app/
+# robots.txt for gsoc.app
+# https://gsoc.app/
 
 User-agent: *
 Allow: /
 
 # Sitemaps
-Sitemap: https://gsoc-espionage.vercel.app/sitemap.xml
-
-# Crawl-delay (optional, for polite crawlers)
-Crawl-delay: 1
+Sitemap: https://gsoc.app/sitemap.xml

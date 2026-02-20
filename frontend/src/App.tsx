@@ -90,8 +90,15 @@ class App extends React.Component<{}, AppState> {
         // Listen for browser back/forward button
         window.addEventListener('popstate', this.handlePopState);
 
-        // Parse URL parameters to auto-fill search box
-        this.parseUrlAndFillSearch();
+        // Check if orgs view is requested via URL
+        const urlParams = new URLSearchParams(window.location.search);
+        if (urlParams.get('view') === 'orgs') {
+            this.setState({ showOrgsView: true });
+            document.title = 'GSoC 2026 Organizations — 185 Orgs | gsoc.app';
+        } else {
+            // Parse URL parameters to auto-fill search box
+            this.parseUrlAndFillSearch();
+        }
     }
 
     /**
@@ -128,19 +135,26 @@ class App extends React.Component<{}, AppState> {
      * Handle browser back/forward button
      */
     private handlePopState = (event: PopStateEvent): void => {
-        if (event.state?.url) {
+        if (event.state?.view === 'orgs') {
+            this.setState({ showOrgsView: true });
+            document.title = 'GSoC 2026 Organizations — 185 Orgs | gsoc.app';
+        } else if (event.state?.url) {
+            this.setState({ showOrgsView: false });
+            document.title = 'GSoC 2026 Organizations & PR Analytics | gsoc.app';
             this.setState({ repositoryUrl: event.state.url }, () => {
                 this.handleSubmit({ preventDefault: () => { } } as React.FormEvent);
             });
         } else {
             // No state = go to home
             this.setState({
+                showOrgsView: false,
                 showResults: false,
                 repositoryStats: null,
                 userStats: null,
                 analysisType: null,
                 previousAnalysis: null,
             });
+            document.title = 'GSoC 2026 Organizations & PR Analytics | gsoc.app';
         }
     };
 
@@ -732,7 +746,17 @@ class App extends React.Component<{}, AppState> {
                     {/* GSoC Orgs Mode Toggle - top left */}
                     <button
                         className={`orgs-mode-toggle ${showOrgsView ? 'active' : ''}`}
-                        onClick={() => this.setState({ showOrgsView: !showOrgsView })}
+                        onClick={() => {
+                            const next = !showOrgsView;
+                            if (next) {
+                                window.history.pushState({ view: 'orgs' }, '', '?view=orgs');
+                                document.title = 'GSoC 2026 Organizations — 185 Orgs | gsoc.app';
+                            } else {
+                                window.history.pushState({}, '', '/');
+                                document.title = 'GSoC 2026 Organizations & PR Analytics | gsoc.app';
+                            }
+                            this.setState({ showOrgsView: next });
+                        }}
                         title={showOrgsView ? 'Switch to PR Analytics' : 'View GSoC 2026 Organizations'}
                         aria-label="Toggle between PR analytics and GSoC 2026 organizations"
                         aria-pressed={showOrgsView}

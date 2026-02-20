@@ -3,13 +3,21 @@
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9
         http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd">
-  
-  <!-- Homepage -->
+
+  <!-- Homepage / PR Analytics -->
   <url>
-    <loc>https://gsoc-espionage.vercel.app/</loc>
-    <lastmod>2026-01-16</lastmod>
+    <loc>https://gsoc.app/</loc>
+    <lastmod>2026-02-21</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
   </url>
-  
+
+  <!-- GSoC 2026 Organizations view -->
+  <url>
+    <loc>https://gsoc.app/?view=orgs</loc>
+    <lastmod>2026-02-21</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
+  </url>
+
 </urlset>
