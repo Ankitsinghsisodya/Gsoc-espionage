@@ -104,47 +104,6 @@ jobs:
           aws cloudfront publish-function --name "$FUNCTION_NAME" --if-match "$ETAG"
           echo "✓ CloudFront Function published: $FUNCTION_NAME"
 
-      - name: Deploy CloudFront Function (Security Headers)
-        # Viewer-response function that adds HTTP security headers to every response.
-        # Fixes Lighthouse Best Practices: HSTS, XFO, COOP, nosniff, Referrer-Policy.
-        # After deploy, attach this function to your CloudFront distribution's
-        # default cache behavior as a "Viewer Response" event (one-time AWS Console step).
-        run: |
-          RESPONSE_FUNCTION_CODE=$(cat <<'CFEOF'
-          function handler(event) {
-            var response = event.response;
-            var headers = response.headers;
-            headers['strict-transport-security'] = { value: 'max-age=31536000; includeSubDomains; preload' };
-            headers['x-frame-options'] = { value: 'SAMEORIGIN' };
-            headers['x-content-type-options'] = { value: 'nosniff' };
-            headers['cross-origin-opener-policy'] = { value: 'same-origin' };
-            headers['referrer-policy'] = { value: 'strict-origin-when-cross-origin' };
-            headers['permissions-policy'] = { value: 'camera=(), microphone=(), geolocation=()' };
-            return response;
-          }
-          CFEOF
-          )
-
-          RESPONSE_FUNCTION_NAME="gsoc-app-security-headers"
-
-          if aws cloudfront describe-function --name "$RESPONSE_FUNCTION_NAME" > /dev/null 2>&1; then
-            ETAG=$(aws cloudfront describe-function --name "$RESPONSE_FUNCTION_NAME" --query 'ETag' --output text)
-            aws cloudfront update-function \
-              --name "$RESPONSE_FUNCTION_NAME" \
-              --function-config Comment="Security headers for gsoc.app",Runtime=cloudfront-js-2.0 \
-              --function-code "$RESPONSE_FUNCTION_CODE" \
-              --if-match "$ETAG"
-          else
-            aws cloudfront create-function \
-              --name "$RESPONSE_FUNCTION_NAME" \
-              --function-config Comment="Security headers for gsoc.app",Runtime=cloudfront-js-2.0 \
-              --function-code "$RESPONSE_FUNCTION_CODE"
-          fi
-
-          ETAG=$(aws cloudfront describe-function --name "$RESPONSE_FUNCTION_NAME" --query 'ETag' --output text)
-          aws cloudfront publish-function --name "$RESPONSE_FUNCTION_NAME" --if-match "$ETAG"
-          echo "✓ CloudFront Function published: $RESPONSE_FUNCTION_NAME"
-
       - name: Invalidate CloudFront cache
         run: |
           aws cloudfront create-invalidation \
