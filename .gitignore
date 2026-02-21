@@ -7,6 +7,8 @@ node_modules/
 dist/
 build/
 *.tsbuildinfo
+# tsc compiles vite.config.ts → vite.config.js (generated, not needed in repo)
+frontend/vite.config.js
 
 # Environment files
 .env
