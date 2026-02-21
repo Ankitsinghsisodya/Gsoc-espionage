@@ -143,15 +143,13 @@ export class GsocOrgs extends React.Component<{}, GsocOrgsState> {
         return (
             <>
             <Helmet>
-                <title>GSoC 2026 Organizations — {allOrgs.length} Orgs | gsoc.app</title>
+                <title>{`GSoC 2026 Organizations — ${allOrgs.length} Orgs | gsoc.app`}</title>
                 <meta
                     name="description"
                     content={`Browse all ${allOrgs.length} organizations participating in Google Summer of Code 2026, including ${newOrgs.length} new ones. Find ideas lists, tech stacks, and contact information.`}
                 />
                 <link rel="canonical" href="https://gsoc.app/orgs" />
-                <script type="application/ld+json">
-                    {JSON.stringify(itemListSchema)}
-                </script>
+                <script type="application/ld+json">{JSON.stringify(itemListSchema)}</script>
             </Helmet>
             <div className="gsoc-orgs-view">
                 {/* Header */}

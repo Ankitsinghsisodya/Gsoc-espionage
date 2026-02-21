@@ -826,11 +826,7 @@ function AppWithRouter() {
     return (
         <>
             <Helmet>
-                <title>
-                    {isOrgs
-                        ? 'GSoC 2026 Organizations — 185 Orgs | gsoc.app'
-                        : 'GSoC 2026 PR Analytics & Contributor Insights | gsoc.app'}
-                </title>
+                <title>{isOrgs ? 'GSoC 2026 Organizations — 185 Orgs | gsoc.app' : 'GSoC 2026 PR Analytics & Contributor Insights | gsoc.app'}</title>
                 <meta
                     name="description"
                     content={isOrgs
