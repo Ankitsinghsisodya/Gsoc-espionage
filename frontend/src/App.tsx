@@ -608,17 +608,17 @@ class App extends React.Component<AppProps, AppState> {
                 <div className="feature-cards">
                     <div className="feature-card">
                         <div className="feature-card-icon purple">📊</div>
-                        <h3>PR Analytics</h3>
+                        <h2>PR Analytics</h2>
                         <p>Track open, merged, and closed pull requests over time</p>
                     </div>
                     <div className="feature-card">
                         <div className="feature-card-icon blue">👥</div>
-                        <h3>Contributors</h3>
+                        <h2>Contributors</h2>
                         <p>Identify maintainers and top contributors</p>
                     </div>
                     <div className="feature-card">
                         <div className="feature-card-icon green">📈</div>
-                        <h3>Metrics</h3>
+                        <h2>Metrics</h2>
                         <p>Review times, merge rates, and code changes</p>
                     </div>
                 </div>

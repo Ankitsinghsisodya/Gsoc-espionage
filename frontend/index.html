@@ -2,6 +2,8 @@
 <html lang="en">
 
 <head>
+  <meta charset="UTF-8" />
+
   <!-- Google tag (gtag.js) -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-88PVHDSHC4"></script>
   <script>
@@ -10,8 +12,6 @@
     gtag('js', new Date());
     gtag('config', 'G-88PVHDSHC4');
   </script>
-
-  <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
   <meta name="google-site-verification" content="bNj8sP6n0Te4QkG-Ux7n92YAAk1ESCJh2AyAJTG5MsQ" />
@@ -67,9 +67,11 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link rel="preconnect" href="https://api.github.com" />
+  <link rel="dns-prefetch" href="https://www.googletagmanager.com" />
 
-  <!-- Fonts -->
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <!-- Fonts: async load to avoid render-blocking (saves ~750ms on mobile) -->
+  <link rel="preload" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'" />
+  <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" /></noscript>
 
   <!-- Structured Data: WebApplication -->
   <script type="application/ld+json">
