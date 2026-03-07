@@ -1,4 +1,4 @@
-import { ArrowLeft, ArrowRight, Building2, ChevronDown, ChevronUp, Download, GitBranch, Key, Moon, Search, Sun } from 'lucide-react';
+import { ArrowLeft, ArrowRight, Building2, ChevronDown, ChevronUp, Download, GitBranch, Github, Key, Moon, Search, Star, Sun } from 'lucide-react';
 import React, { Suspense } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { NavigateFunction, useLocation, useNavigate } from 'react-router-dom';
@@ -775,6 +775,20 @@ class App extends React.Component<AppProps, AppState> {
                         <Building2 className="orgs-toggle-icon w-4 h-4" aria-hidden="true" />
                         <span className="orgs-toggle-label">GSoC 2026 Orgs</span>
                     </button>
+
+                    {/* GitHub Repo - top right */}
+                    <a
+                        className="github-link-btn"
+                        href="https://github.com/Ankitsinghsisodya/Gsoc-espionage"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        title="Star us on GitHub"
+                        aria-label="Star on GitHub"
+                    >
+                        <Github className="w-4 h-4" />
+                        <Star className="github-star-icon" />
+                        <span>Star</span>
+                    </a>
 
                     {/* Theme Toggle - top right */}
                     <button

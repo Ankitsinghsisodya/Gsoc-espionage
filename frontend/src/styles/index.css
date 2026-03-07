@@ -147,6 +147,87 @@ body {
   position: relative;
 }
 
+/* GitHub Repo Link Button */
+.github-link-btn {
+  position: fixed;
+  top: 20px;
+  right: 72px;
+  z-index: 100;
+  height: 46px;
+  padding: 0 16px;
+  background: #24292f;
+  border-top: 1px solid rgba(240, 246, 252, 0.2);
+  border-bottom: 1px solid rgba(240, 246, 252, 0.2);
+  border-left: none;
+  border-right: none;
+  border-radius: 12px;
+  color: #ffffff;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  text-decoration: none;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;
+  font-size: 13px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.github-link-btn:hover {
+  background: #30363d;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
+  color: #ffffff;
+  text-decoration: none;
+}
+
+.github-link-btn:active {
+  transform: translateY(0);
+  background: #282e33;
+}
+
+.github-link-btn svg {
+  color: #ffffff;
+  flex-shrink: 0;
+  width: 16px;
+  height: 16px;
+}
+
+.github-link-btn .github-star-icon {
+  width: 14px;
+  height: 14px;
+}
+
+[data-theme="light"] .github-link-btn {
+  background: #24292f;
+  color: #ffffff;
+  border-color: rgba(27, 31, 36, 0.15);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+[data-theme="light"] .github-link-btn:hover {
+  background: #30363d;
+  color: #ffffff;
+}
+
+@media (max-width: 480px) {
+  .github-link-btn span {
+    display: none;
+  }
+
+  .github-link-btn .github-star-icon {
+    display: none;
+  }
+
+  .github-link-btn {
+    padding: 0 12px;
+    height: 46px;
+    right: 68px;
+  }
+}
+
 /* Theme Toggle Button */
 .theme-toggle-btn {
   position: fixed;
